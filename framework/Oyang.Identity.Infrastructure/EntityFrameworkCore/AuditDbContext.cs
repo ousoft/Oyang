@@ -12,12 +12,12 @@ namespace Oyang.Identity.Infrastructure.EntityFrameworkCore
     public class AuditDbContext : DbContext
     {
 
-        public AuditDbContext(DbContextOptions options, CurrentUser currentUser) : base(options)
+        public AuditDbContext(DbContextOptions options, ICurrentUser currentUser) : base(options)
         {
             _user = currentUser;
         }
 
-        private readonly CurrentUser _user;
+        private readonly ICurrentUser _user;
 
         public void SetAddAudit<TEntity>(params TEntity[] entities) where TEntity : Entity
         {

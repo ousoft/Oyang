@@ -14,6 +14,8 @@ using AutoMapper;
 using Oyang.Identity.Domain;
 using Oyang.Identity.Web.Middlewares;
 using Oyang.Identity.Web.Extensions;
+using AspectCore.Extensions.DependencyInjection;
+using AspectCore.Configuration;
 
 namespace Oyang.Identity.Web
 {
@@ -27,8 +29,11 @@ namespace Oyang.Identity.Web
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceCollection ConfigureServices(IServiceCollection services)
         {
+            services.AddControllersWithViews();
+            services.AddDbContext<IdentityDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnectionString")));
+
             services.AddCors(options =>
             {
                 var originsString = Configuration.GetValue<string>("Origins");
@@ -39,8 +44,6 @@ namespace Oyang.Identity.Web
                         builder.WithOrigins(origins).AllowAnyHeader().AllowAnyMethod();
                     });
             });
-            services.AddDbContext<IdentityDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnectionString")));
-
             var mapperConfiguration = new MapperConfiguration(t =>
             {
                 t.AddProfile<IdentityProfile>();
@@ -49,11 +52,11 @@ namespace Oyang.Identity.Web
             services.AddOyangIdentity();
             services.AddScoped<ICurrentUser>();
 
-            services.AddControllersWithViews();
 
-            
-            //var container = services.ToServiceContainer();
-            //return container.Build();
+            services.ConfigureDynamicProxy();
+            return services.WeaveDynamicProxyService();
+            //return services.BuildDynamicProxyProvider();
+            //return services.BuildAspectCoreServiceProvider();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -82,7 +85,7 @@ namespace Oyang.Identity.Web
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            //app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

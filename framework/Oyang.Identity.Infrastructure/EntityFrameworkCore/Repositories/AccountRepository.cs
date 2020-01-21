@@ -14,9 +14,9 @@ using Oyang.Identity.Infrastructure.Identity;
 
 namespace Oyang.Identity.Infrastructure.EntityFrameworkCore.Repositories
 {
-    public class CurrentUserRepository : EfRepository, IAccountRepository
+    public class AccountRepository : EfRepository, IAccountRepository
     {
-        public CurrentUserRepository(IdentityDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
+        public AccountRepository(IdentityDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
         {
         }
 

@@ -8,9 +8,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Oyang.Identity.Infrastructure.Aop
 {
-    public class PermissionAttribute : AbstractInterceptorAttribute
+    public class PermissionInterceptorAttribute : AbstractInterceptorAttribute
     {
-        public PermissionAttribute(string code, string name)
+        public PermissionInterceptorAttribute(string code, string name)
         {
             this.Code = code;
             this.Name = name;

@@ -15,7 +15,7 @@ namespace Oyang.Identity.Web.ApiControllers
         private readonly IUserAppService _userAppService;
         public UserController(IUserAppService userAppService)
         {
-            _userAppService = userAppService;User 
+            _userAppService = userAppService; 
         }
 
         public IActionResult GetList(GetListInputDto input)

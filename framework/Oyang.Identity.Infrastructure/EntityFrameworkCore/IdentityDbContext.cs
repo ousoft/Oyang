@@ -9,7 +9,7 @@ namespace Oyang.Identity.Infrastructure.EntityFrameworkCore
 {
     public class IdentityDbContext : AuditDbContext
     {
-        public IdentityDbContext(DbContextOptions options, CurrentUser currentUser) : base(options, currentUser)
+        public IdentityDbContext(DbContextOptions options, ICurrentUser currentUser) : base(options, currentUser)
         {
         }
 
