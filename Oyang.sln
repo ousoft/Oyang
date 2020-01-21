@@ -1,0 +1,53 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29709.97
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "framework", "framework", "{C60C3507-ADB2-4FD5-ABDE-BE487E058126}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "modules", "modules", "{67D60814-46F1-4427-8B98-02286347D260}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Oyang.Identity.Application", "framework\Oyang.Identity.Application\Oyang.Identity.Application.csproj", "{B3EBCB62-47E3-4102-8601-35ACB30FAAC0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Oyang.Identity.Infrastructure", "framework\Oyang.Identity.Infrastructure\Oyang.Identity.Infrastructure.csproj", "{157072BE-4CFA-48AB-B513-6909E5BEE025}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Oyang.Identity.Domain", "framework\Oyang.Identity.Domain\Oyang.Identity.Domain.csproj", "{19527D8E-7AC1-4F43-B3E0-E47BD7F7F73B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Oyang.Identity.Web", "framework\Oyang.Identity.Web\Oyang.Identity.Web.csproj", "{A9E1F7D4-0528-471E-9CBB-77A880791BAD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B3EBCB62-47E3-4102-8601-35ACB30FAAC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3EBCB62-47E3-4102-8601-35ACB30FAAC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3EBCB62-47E3-4102-8601-35ACB30FAAC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3EBCB62-47E3-4102-8601-35ACB30FAAC0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{157072BE-4CFA-48AB-B513-6909E5BEE025}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{157072BE-4CFA-48AB-B513-6909E5BEE025}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{157072BE-4CFA-48AB-B513-6909E5BEE025}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{157072BE-4CFA-48AB-B513-6909E5BEE025}.Release|Any CPU.Build.0 = Release|Any CPU
+		{19527D8E-7AC1-4F43-B3E0-E47BD7F7F73B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19527D8E-7AC1-4F43-B3E0-E47BD7F7F73B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19527D8E-7AC1-4F43-B3E0-E47BD7F7F73B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19527D8E-7AC1-4F43-B3E0-E47BD7F7F73B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9E1F7D4-0528-471E-9CBB-77A880791BAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9E1F7D4-0528-471E-9CBB-77A880791BAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9E1F7D4-0528-471E-9CBB-77A880791BAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9E1F7D4-0528-471E-9CBB-77A880791BAD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B3EBCB62-47E3-4102-8601-35ACB30FAAC0} = {C60C3507-ADB2-4FD5-ABDE-BE487E058126}
+		{157072BE-4CFA-48AB-B513-6909E5BEE025} = {C60C3507-ADB2-4FD5-ABDE-BE487E058126}
+		{19527D8E-7AC1-4F43-B3E0-E47BD7F7F73B} = {C60C3507-ADB2-4FD5-ABDE-BE487E058126}
+		{A9E1F7D4-0528-471E-9CBB-77A880791BAD} = {C60C3507-ADB2-4FD5-ABDE-BE487E058126}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {35263835-9C59-4AEF-9061-2232A71A48B7}
+	EndGlobalSection
+EndGlobal
