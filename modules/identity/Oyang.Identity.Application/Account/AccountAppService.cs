@@ -1,5 +1,6 @@
-﻿using Oyang.Identity.Domain;
-using Oyang.Identity.Domain.Account;
+﻿using Oyang.Identity.Application.Account.Dtos;
+using Oyang.Identity.Domain;
+using Oyang.Identity.Domain.Repositories;
 using System;
 
 namespace Oyang.Identity.Application.Account

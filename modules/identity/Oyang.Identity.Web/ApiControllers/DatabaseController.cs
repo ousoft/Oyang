@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Oyang.Identity.Application.Database;
-using Oyang.Identity.Domain.User;
 
 namespace Oyang.Identity.Web.ApiControllers
 {

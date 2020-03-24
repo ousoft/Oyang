@@ -47,6 +47,7 @@ namespace Oyang.Identity.Web
                         builder.WithOrigins(origins).AllowAnyHeader().AllowAnyMethod();
                     });
             });
+
             var mapperConfiguration = new MapperConfiguration(t =>
             {
                 t.AddProfile<IdentityProfile>();

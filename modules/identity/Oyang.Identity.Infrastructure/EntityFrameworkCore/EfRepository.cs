@@ -2,42 +2,49 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Oyang.Identity.Domain;
 
 namespace Oyang.Identity.Infrastructure.EntityFrameworkCore
 {
-    public abstract class EfRepository : IRepository
-    {
-        public EfRepository(IdentityDbContext dbContext)
-        {
-            DbContext = dbContext;
-        }
-        public EfRepository(IdentityDbContext dbContext, IMapper mapper)
-        {
-            DbContext = dbContext;
-            Mapper = mapper;
-        }
 
+    public class EfRepository<TEntity> : AuditRepository, IRepository<TEntity> where TEntity : Entity
+    {
         protected IdentityDbContext DbContext { get; }
-        protected IMapper Mapper { get; }
-
-    }
-    public class EfRepository<TEntity> : EfRepository where TEntity : Entity
-    {
-        public EfRepository(IdentityDbContext dbContext) : base(dbContext)
-        {
-            Queryable = dbContext.Queryable<TEntity>().AsNoTracking();
-        }
-
-        public EfRepository(IdentityDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
-        {
-            Queryable = dbContext.Queryable<TEntity>().AsNoTracking();
-        }
-
+        protected ICurrentUser CurrentUser { get; }
         protected IQueryable<TEntity> Queryable { get; }
 
+        public EfRepository(IdentityDbContext dbContext, ICurrentUser currentUser) : base(dbContext, currentUser)
+        {
+            DbContext = dbContext;
+            CurrentUser = currentUser;
+            Queryable = dbContext.Set<TEntity>().AsNoTracking();
+        }
+
+        public List<TEntity> GetList()
+        {
+            return Queryable.ToList();
+        }
+
+        public TEntity Get(Guid id)
+        {
+            return DbContext.Find<TEntity>(id);
+        }
+
+        public void Add(TEntity entity)
+        {
+            AddAttachAudit(entity);
+        }
+
+        public void Update(TEntity entity)
+        {
+            UpdateAttachAudit(entity);
+        }
+
+        public void Remove(Guid id)
+        {
+            RemoveAttachAudit<TEntity>(id);
+        }
     }
 }
 

@@ -1,12 +1,16 @@
 ﻿using Oyang.Identity.Domain;
-using Oyang.Identity.Domain.User;
+using Oyang.Identity.Domain.Repositories;
+using Oyang.Identity.Application.User.Dtos;
 using System;
+using System.Collections.Generic;
+using Oyang.Identity.Domain.Entities;
 
 namespace Oyang.Identity.Application.User
 {
     public class UserAppService : BaseAppService, IUserAppService
     {
         private readonly IUserRepository _repository;
+        private readonly IObjectMapper  _objectMapper;
         public UserAppService(IUserRepository repository)
         {
             _repository = repository;
@@ -19,12 +23,15 @@ namespace Oyang.Identity.Application.User
             ValidationObject.Validate(string.IsNullOrWhiteSpace(input.Password2), "确认密码不能为空");
             ValidationObject.Validate(input.Password != input.Password2, "密码和确认密码不一致");
             ValidationObject.Validate(_repository.ExistUser(input.LoginName), "登录名已存在");
-            _repository.Add(input);
+            var entity = _objectMapper.Map<AddInputDto, UserEntity>(input);
+            _repository.Add(entity);
         }
 
         public Pagination<UserDto> GetList(GetListInputDto input)
         {
-            return _repository.GetList(input);
+            var pagination = _repository.GetList(input, input.LoginName);
+            var list = _objectMapper.Map<List<UserEntity>,List<UserDto>>(pagination.Items);
+            return new Pagination<UserDto>(pagination, pagination.TotalCount, list);
         }
 
         public void Remove(Guid id)
@@ -37,17 +44,16 @@ namespace Oyang.Identity.Application.User
             ValidationObject.Validate(string.IsNullOrWhiteSpace(input.Password), "密码不能为空");
             ValidationObject.Validate(string.IsNullOrWhiteSpace(input.Password2), "确认密码不能为空");
             ValidationObject.Validate(input.Password != input.Password2, "密码和确认密码不一致");
-            _repository.ResetPassword(input);
         }
 
         public void SetRole(SetRoleInputDto input)
         {
-            _repository.SetRole(input);
+            _repository.SetRole(input.UserId,input.RoleIds);
         }
 
         public void Update(UpdateInputDto input)
         {
-            _repository.Update(input);
+            _repository.Update(null);
         }
     }
 }

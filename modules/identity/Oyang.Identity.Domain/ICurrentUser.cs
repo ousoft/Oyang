@@ -1,7 +1,4 @@
-﻿using Oyang.Identity.Domain.Menu;
-using Oyang.Identity.Domain.Permission;
-using Oyang.Identity.Domain.Role;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Oyang.Identity.Application.User;
-using Oyang.Identity.Domain.User;
+using Oyang.Identity.Application.User.Dtos;
 
 namespace Oyang.Identity.Web.ApiControllers
 {

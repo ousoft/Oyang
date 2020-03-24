@@ -1,22 +1,21 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Oyang.Identity.Domain;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using Oyang.Identity.Domain;
-using System.Linq.Expressions;
 using System.Linq;
+using System.Text;
 
 namespace Oyang.Identity.Infrastructure.EntityFrameworkCore
 {
-    public class AuditDbContext : DbContext
+    public abstract class AuditRepository
     {
-
-        public AuditDbContext(DbContextOptions options, ICurrentUser currentUser) : base(options)
+        private readonly DbContext _dbContext;
+        private readonly ICurrentUser _currentUser;  
+        public AuditRepository(DbContext dbContext, ICurrentUser currentUser)
         {
-            _user = currentUser;
+            _dbContext = dbContext;
+            _currentUser = currentUser;
         }
-
-        private readonly ICurrentUser _user;
 
         public void SetAddAudit<TEntity>(params TEntity[] entities) where TEntity : Entity
         {
@@ -29,9 +28,9 @@ namespace Oyang.Identity.Infrastructure.EntityFrameworkCore
                 {
                     item.Id = Guid.NewGuid();
                 }
-                if (_user != null)
+                if (_currentUser != null)
                 {
-                    item.CreatorId = _user.Id;
+                    item.CreatorId = _currentUser.Id;
                 }
             }
         }
@@ -41,9 +40,9 @@ namespace Oyang.Identity.Infrastructure.EntityFrameworkCore
             foreach (var item in entities)
             {
                 item.LastModificationTime = time;
-                if (_user != null)
+                if (_currentUser != null)
                 {
-                    item.LastModifierId = _user.Id;
+                    item.LastModifierId = _currentUser.Id;
                 }
             }
         }
@@ -54,9 +53,9 @@ namespace Oyang.Identity.Infrastructure.EntityFrameworkCore
             {
                 item.IsDeleted = true;
                 item.DeletionTime = time;
-                if (_user != null)
+                if (_currentUser != null)
                 {
-                    item.DeleterId = _user.Id;
+                    item.DeleterId = _currentUser.Id;
                 }
             }
         }
@@ -64,13 +63,13 @@ namespace Oyang.Identity.Infrastructure.EntityFrameworkCore
         {
             SetAddAudit(entities);
             var entityObjects = entities.Select(t => (object)t);
-            base.AddRange(entityObjects);
+            _dbContext.AddRange(entityObjects);
         }
         public void UpdateAttachAudit<TEntity>(params TEntity[] entities) where TEntity : Entity
         {
             SetUpdateAudit(entities);
             var entityObjects = entities.Select(t => (object)t);
-            base.UpdateRange(entityObjects);
+            _dbContext.UpdateRange(entityObjects);
         }
         public void RemoveAttachAudit<TEntity>(params TEntity[] entities) where TEntity : Entity
         {
@@ -78,23 +77,13 @@ namespace Oyang.Identity.Infrastructure.EntityFrameworkCore
         }
         public void RemoveAttachAudit<TEntity>(params Guid[] ids) where TEntity : Entity
         {
-            var entities = base.Set<TEntity>().Where(t => ids.Contains(t.Id)).ToArray();
+            var entities = _dbContext.Set<TEntity>().Where(t => ids.Contains(t.Id)).ToArray();
             RemoveAttachAudit(entities);
         }
-        public void RemoveAttachAudit<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : Entity
+        public void RemoveAttachAudit<TEntity>(System.Linq.Expressions.Expression<Func<TEntity, bool>> predicate) where TEntity : Entity
         {
-            var entities = base.Set<TEntity>().Where(predicate).ToArray();
+            var entities = _dbContext.Set<TEntity>().Where(predicate).ToArray();
             RemoveAttachAudit(entities);
         }
-        public IQueryable<TEntity> Queryable<TEntity>(bool isEnableFilter = true) where TEntity : Entity
-        {
-            var query = Set<TEntity>().AsQueryable();
-            if (isEnableFilter)
-            {
-                query = query.Where(t => !t.IsDeleted);
-            }
-            return query;
-        }
-
     }
 }

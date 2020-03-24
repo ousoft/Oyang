@@ -1,5 +1,4 @@
 ﻿using Oyang.Identity.Domain;
-using Oyang.Identity.Domain.Account;
 using System;
 using System.Collections.Generic;
 using System.Text;

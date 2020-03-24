@@ -1,5 +1,5 @@
-﻿using Oyang.Identity.Domain;
-using Oyang.Identity.Domain.Account;
+﻿using Oyang.Identity.Application.Account.Dtos;
+using Oyang.Identity.Domain;
 using System;
 using System.Collections.Generic;
 using System.Text;

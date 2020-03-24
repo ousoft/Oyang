@@ -8,12 +8,12 @@ namespace Oyang.Identity.Domain
     {
 
     }
-    public interface IRepository<TAggregateRoot> : IRepository where TAggregateRoot : IAggregateRoot
+    public interface IRepository<TEntity> : IRepository where TEntity : Entity
     {
-        List<TAggregateRoot> GetList(ISpecification<TAggregateRoot> spec);
-        TAggregateRoot Get(ISpecification<TAggregateRoot> spec);
-        void Create(TAggregateRoot aggregateRoot);
-        void Update(TAggregateRoot aggregateRoot);
-        void Remove(TAggregateRoot aggregateRoot);
+        List<TEntity> GetList();
+        TEntity Get(Guid id);
+        void Add(TEntity entity);
+        void Update(TEntity entity);
+        void Remove(Guid id);
     }
 }

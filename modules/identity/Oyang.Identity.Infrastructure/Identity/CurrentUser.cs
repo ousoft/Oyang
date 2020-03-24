@@ -1,7 +1,5 @@
 ﻿using Oyang.Identity.Domain;
-using Oyang.Identity.Domain.Menu;
-using Oyang.Identity.Domain.Permission;
-using Oyang.Identity.Domain.Role;
+using Oyang.Identity.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -12,29 +10,29 @@ namespace Oyang.Identity.Infrastructure.Identity
 {
     public class CurrentUser : ICurrentUser
     {
-        public CurrentUser(
-            Guid id,
-            string loginName,
-            string passwordHash,
-            List<RoleDto> roles,
-            List<PermissionDto> permissions,
-            List<MenuDto> menus
-            )
-        {
-            this.Id = id;
-            this.LoginName = loginName;
-            this.PasswordHash = passwordHash;
-            this.Roles = roles;
-            this.Permissions = permissions;
-            this.Menus = GetTreeMenu(menus);
-        }
+        //public CurrentUser(
+        //    Guid id,
+        //    string loginName,
+        //    string passwordHash,
+        //    List<RoleEntity> roles,
+        //    List<PermissionEntity> permissions,
+        //    List<MenuDto> menus
+        //    )
+        //{
+        //    this.Id = id;
+        //    this.LoginName = loginName;
+        //    this.PasswordHash = passwordHash;
+        //    this.Roles = roles;
+        //    this.Permissions = permissions;
+        //    this.Menus = GetTreeMenu(menus);
+        //}
 
         public Guid Id { get; }
         public string LoginName { get; }
         public string PasswordHash { get; }
-        public IReadOnlyList<RoleDto> Roles { get; }
-        public IReadOnlyList<PermissionDto> Permissions { get; }
-        public IReadOnlyList<MenuDto> Menus { get; }
+        public IReadOnlyList<RoleEntity> Roles { get; }
+        public IReadOnlyList<PermissionEntity> Permissions { get; }
+        //public IReadOnlyList<MenuDto> Menus { get; }
 
         public bool HasRole(string name)
         {
@@ -45,23 +43,23 @@ namespace Oyang.Identity.Infrastructure.Identity
             return Permissions.Any(t => t.Code == code);
         }
 
-        private List<MenuDto> GetTreeMenu(List<MenuDto> menus)
-        {
-            var list = menus.Where(t => t.ParentId == null).ToList();
-            LoadTreeMenu(menus, list);
-            return list;
-        }
+        //private List<MenuDto> GetTreeMenu(List<MenuDto> menus)
+        //{
+        //    var list = menus.Where(t => t.ParentId == null).ToList();
+        //    LoadTreeMenu(menus, list);
+        //    return list;
+        //}
 
-        private void LoadTreeMenu(List<MenuDto> menuAllList, List<MenuDto> list)
-        {
-            foreach (var item in list)
-            {
-                item.Children = menuAllList.Where(t => t.ParentId == item.Id).ToList();
-                if (item.Children.Count > 0)
-                {
-                    LoadTreeMenu(menuAllList, item.Children);
-                }
-            }
-        }
+        //private void LoadTreeMenu(List<MenuDto> menuAllList, List<MenuDto> list)
+        //{
+        //    foreach (var item in list)
+        //    {
+        //        item.Children = menuAllList.Where(t => t.ParentId == item.Id).ToList();
+        //        if (item.Children.Count > 0)
+        //        {
+        //            LoadTreeMenu(menuAllList, item.Children);
+        //        }
+        //    }
+        //}
     }
 }

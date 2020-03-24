@@ -1,6 +1,6 @@
 ﻿using Oyang.Identity.Domain;
-using Oyang.Identity.Domain.Database;
-using Oyang.Identity.Domain.Permission;
+using Oyang.Identity.Domain.Entities;
+using Oyang.Identity.Domain.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,7 +36,7 @@ namespace Oyang.Identity.Application.Database
         {
             _repository.CleanSeedDataByPermission();
 
-            var list = new List<PermissionDto>();
+            var list = new List<PermissionEntity>();
             var appServiceTypes = System.Reflection.Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsInterface && t.BaseType == typeof(IApplicationService));
             foreach (var appService in appServiceTypes)
             {
@@ -46,7 +46,7 @@ namespace Oyang.Identity.Application.Database
                     var attribute = method.GetCustomAttribute<PermissionAttribute>();
                     if (attribute != null && !list.Exists(t => t.Code == attribute.Code))
                     {
-                        list.Add(new PermissionDto()
+                        list.Add(new PermissionEntity()
                         {
                             Id = Guid.NewGuid(),
                             Code = attribute.Code,

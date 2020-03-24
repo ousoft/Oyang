@@ -25,14 +25,15 @@ namespace Oyang.Identity.Domain
         {
 
         }
-        public Pagination(Pagination pagination, List<T> list,int totalCount)
+        public Pagination(Pagination pagination, int totalCount, List<T> list)
         {
             this.PageIndex = pagination.PageIndex;
             this.PageSize = pagination.PageSize;
             this.SortField = pagination.SortField;
             this.IsAscending = pagination.IsAscending;
-            this.Items = list;
+            this.SecondarySort = pagination.SecondarySort;
             this.TotalCount = totalCount;
+            this.Items = list;
         }
 
         public int TotalCount { get; }
