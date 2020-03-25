@@ -3,31 +3,34 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Oyang.Identity.Domain;
+using Oyang.Identity.Domain.Entities;
+using Oyang.Identity.Domain.Repositories;
 using Oyang.Identity.Infrastructure.Identity;
 
 namespace Oyang.Identity.Infrastructure.EntityFrameworkCore.Repositories
 {
-    //public class DatabaseRepository : EfRepository, IDatabaseRepository
-    //{
-    //    public DatabaseRepository(IdentityDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
-    //    {
-    //    }
+    public class DatabaseRepository : AuditRepository, IDatabaseRepository
+    {
+        private readonly IdentityDbContext _dbContext;
 
-    //    public void GenerateDatabase()
-    //    {
-    //        DbContext.Database.EnsureCreated();
-    //    }
+        public DatabaseRepository(DbContext dbContext, ICurrentUser currentUser) : base(dbContext, currentUser)
+        {
+        }
 
-    //    public void CleanSeedDataByPermission()
-    //    {
-    //        DbContext.RemoveAttachAudit(DbContext.Queryable<PermissionEntity>().ToArray());
-    //    }
+        public void GenerateDatabase()
+        {
+            _dbContext.Database.EnsureCreated();
+        }
 
-    //    public void GenerateSeedDataByPermission(List<PermissionModel> input)
-    //    {
-    //        var listPermission = Mapper.Map<PermissionEntity[]>(input);
-    //        DbContext.AddAttachAudit(listPermission);
-    //    }
+        public void CleanSeedDataByPermission()
+        {
+            _dbContext.RemoveRange(_dbContext.Set<PermissionEntity>());
+        }
 
-    //}
+        public void GenerateSeedDataByPermission(List<PermissionEntity> input)
+        {
+            AddAttachAudit(input.ToArray());
+        }
+
+    }
 }

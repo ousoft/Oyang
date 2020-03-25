@@ -19,6 +19,8 @@ using Oyang.Identity.Web.Middlewares;
 using Oyang.Identity.Web.Extensions;
 using Oyang.Identity.Application.User;
 using Oyang.Identity.Infrastructure.AspectCore;
+using Oyang.Identity.Infrastructure.AutoMapper;
+using Oyang.Identity.Infrastructure.Identity;
 
 namespace Oyang.Identity.Web
 {
@@ -52,9 +54,9 @@ namespace Oyang.Identity.Web
             {
                 t.AddProfile<IdentityProfile>();
             });
-            services.AddSingleton<IMapper>(mapperConfiguration.CreateMapper());
+            services.AddSingleton<Domain.IObjectMapper, ObjectMapper>();
+            services.AddScoped<ICurrentUser,CurrentUser>();
             services.AddOyangIdentity();
-            services.AddScoped<ICurrentUser>();
 
             //Ìæ»»Ä¬ÈÏÈÝÆ÷ÎªAspectCore
             var container = services.ToServiceContext();
