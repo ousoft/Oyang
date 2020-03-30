@@ -6,6 +6,7 @@ using System.Text;
 
 namespace Oyang.Identity.Application.User
 {
+    [Permission(PermissionNames.User, PermissionNames.User_Name)]
     public interface IUserAppService : IApplicationService
     {
         [Permission(PermissionNames.User_GetList, PermissionNames.User_GetList_Name)]

@@ -15,7 +15,6 @@ namespace Oyang.Identity.Web
         public static void Main(string[] args)
         {
             CreateHostBuilder(args).Build().Run();
-
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
@@ -24,6 +23,5 @@ namespace Oyang.Identity.Web
                 {
                     webBuilder.UseStartup<Startup>();
                 }).UseServiceProviderFactory(new DynamicProxyServiceProviderFactory());
-            //.UseServiceProviderFactory(new AspectCoreServiceProviderFactory());
     }
 }

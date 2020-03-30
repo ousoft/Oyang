@@ -20,10 +20,6 @@ namespace Oyang.Identity.Web.Controllers
 
         public IActionResult Index()
         {
-            if (ModelState.IsValid)
-            {
-
-            }
             return View();
         }
 

@@ -10,7 +10,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Oyang.Identity.Infrastructure.EntityFrameworkCore;
-using AutoMapper;
 using AspectCore.Configuration;
 using AspectCore.DependencyInjection;
 using AspectCore.Extensions.DependencyInjection;
@@ -21,6 +20,7 @@ using Oyang.Identity.Application.User;
 using Oyang.Identity.Infrastructure.AspectCore;
 using Oyang.Identity.Infrastructure.AutoMapper;
 using Oyang.Identity.Infrastructure.Identity;
+using AutoMapper;
 
 namespace Oyang.Identity.Web
 {
@@ -34,7 +34,7 @@ namespace Oyang.Identity.Web
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public IServiceProvider ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
             services.AddDbContext<IdentityDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnectionString")));
@@ -50,22 +50,32 @@ namespace Oyang.Identity.Web
                     });
             });
 
-            var mapperConfiguration = new MapperConfiguration(t =>
+            services.AddScoped<IMapper>(t =>
             {
-                t.AddProfile<IdentityProfile>();
+                var mapperConfiguration = new MapperConfiguration(t =>
+                {
+                    t.AddProfile<IdentityProfile>();
+                });
+                return mapperConfiguration.CreateMapper();
             });
             services.AddSingleton<Domain.IObjectMapper, ObjectMapper>();
-            services.AddScoped<ICurrentUser,CurrentUser>();
+            services.AddScoped<ICurrentUser, CurrentUser>();
             services.AddOyangIdentity();
 
-            //Ìæ»»Ä¬ÈÏÈÝÆ÷ÎªAspectCore
-            var container = services.ToServiceContext();
-            container.Configure(config =>
-            {
-                config.Interceptors.AddTyped<PermissionInterceptor>();
-            });
-            return container.Build();
+            //services.ConfigureDynamicProxy(t => t.Interceptors.AddTyped<PermissionInterceptor>());
+            //services.BuildDynamicProxyProvider();
         }
+        //public void ConfigureContainer(ContainerBuilder builder)
+        //{
+        //    builder.RegisterAssemblyTypes(typeof(Program).Assembly).
+        //        Where(x => x.Name.EndsWith("service", StringComparison.OrdinalIgnoreCase)).AsImplementedInterfaces();
+        //    builder.RegisterDynamicProxy();
+
+        //}
+        //public void ConfigureContainer(IServiceCollection builder)
+        //{
+
+        //}
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

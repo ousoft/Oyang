@@ -13,8 +13,9 @@ namespace Oyang.Identity.Infrastructure.EntityFrameworkCore.Repositories
     {
         private readonly IdentityDbContext _dbContext;
 
-        public DatabaseRepository(DbContext dbContext, ICurrentUser currentUser) : base(dbContext, currentUser)
+        public DatabaseRepository(IdentityDbContext dbContext, ICurrentUser currentUser) : base(dbContext, currentUser)
         {
+            _dbContext = dbContext;
         }
 
         public void GenerateDatabase()
