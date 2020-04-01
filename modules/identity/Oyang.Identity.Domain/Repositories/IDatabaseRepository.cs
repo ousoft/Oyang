@@ -9,10 +9,6 @@ namespace Oyang.Identity.Domain.Repositories
 
     public interface IDatabaseRepository : IRepository
     {
-        void GenerateDatabase();
-
-        void GenerateSeedDataByPermission(List<PermissionEntity> input);
-        void CleanSeedDataByPermission();
-
+        bool GenerateDatabase();
     }
 }

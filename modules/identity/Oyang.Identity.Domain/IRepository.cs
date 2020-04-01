@@ -8,7 +8,7 @@ namespace Oyang.Identity.Domain
     {
 
     }
-    public interface IRepository<TEntity> : IBasicRepository<TEntity>, IRangeRepository<TEntity>, IReadOnlyRepository<TEntity> where TEntity : Entity
+    public interface IRepository<TEntity> : IEfRepository<TEntity>, IRepository where TEntity : Entity
     {
 
     }

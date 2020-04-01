@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace Oyang.Identity.Infrastructure.EntityFrameworkCore
+namespace Oyang.Identity.Application
 {
     public static class QueryableExpansion
     {

@@ -11,31 +11,29 @@ namespace Oyang.Identity.Application.Database
 {
     public class DatabaseAppService : BaseAppService, IDatabaseAppService
     {
-        private readonly IDatabaseRepository _repository;
-        public DatabaseAppService(IDatabaseRepository repository)
+        private readonly IDatabaseRepository _databaseRepository;
+        private readonly IRepository<PermissionEntity> _permissionRepository;
+        public DatabaseAppService(
+            IDatabaseRepository databaseRepository,
+            IRepository<PermissionEntity> permissionRepository
+            )
         {
-            _repository = repository;
+            _databaseRepository = databaseRepository;
+            _permissionRepository = permissionRepository;
         }
 
-        public void ClearSeedData()
+        public bool GenerateDatabase()
         {
-            throw new NotImplementedException();
-        }
-
-        public void GenerateDatabase()
-        {
-            _repository.GenerateDatabase();
+            return _databaseRepository.GenerateDatabase();
         }
 
         public void GenerateSeedData()
         {
-            throw new NotImplementedException();
+            GenerateSeedDataByPermission();
         }
 
-        public void RegenerateSeedDataByPermission()
+        public void GenerateSeedDataByPermission()
         {
-            _repository.CleanSeedDataByPermission();
-
             var list = new List<PermissionEntity>();
             var appServiceTypes = System.Reflection.Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsInterface && t.BaseType == typeof(IApplicationService));
             foreach (var appService in appServiceTypes)
@@ -56,7 +54,7 @@ namespace Oyang.Identity.Application.Database
                     }
                 }
             }
-            _repository.GenerateSeedDataByPermission(list);
+            _permissionRepository.AddRange(list);
         }
     }
 }

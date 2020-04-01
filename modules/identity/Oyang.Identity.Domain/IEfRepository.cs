@@ -9,8 +9,9 @@ namespace Oyang.Identity.Domain
     {
         IQueryable<TEntity> Queryable { get; }
         IQueryable<TEntity> QueryableAsNoTracking { get; }
+        TEntity Find(TKey id);
     }
-    public interface IEfRepository<TEntity> : IBasicRepository<TEntity>, IRangeRepository<TEntity>, IReadOnlyRepository<TEntity>
+    public interface IEfRepository<TEntity> : IEfRepository<TEntity, Guid>
         where TEntity : Entity
     {
 

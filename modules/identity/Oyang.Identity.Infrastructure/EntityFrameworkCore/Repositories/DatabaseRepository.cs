@@ -18,20 +18,9 @@ namespace Oyang.Identity.Infrastructure.EntityFrameworkCore.Repositories
             _dbContext = dbContext;
         }
 
-        public void GenerateDatabase()
+        bool IDatabaseRepository.GenerateDatabase()
         {
-            _dbContext.Database.EnsureCreated();
+            return _dbContext.Database.EnsureCreated();
         }
-
-        public void CleanSeedDataByPermission()
-        {
-            _dbContext.RemoveRange(_dbContext.Set<PermissionEntity>());
-        }
-
-        public void GenerateSeedDataByPermission(List<PermissionEntity> input)
-        {
-            //AddAttachAudit(input.ToArray());
-        }
-
     }
 }

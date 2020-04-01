@@ -1,6 +1,13 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Oyang.Identity.Application;
 using Oyang.Identity.Domain;
+using Oyang.Identity.Domain.Entities;
+using Oyang.Identity.Domain.Repositories;
+using Oyang.Identity.Infrastructure.EntityFrameworkCore;
+using Oyang.Identity.Infrastructure.EntityFrameworkCore.Repositories;
+using Oyang.Identity.Application.Database;
+using Oyang.Identity.Application.Account;
+using Oyang.Identity.Application.User;
+using Oyang.Identity.Application.Role;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,26 +20,18 @@ namespace Oyang.Identity.Web.Extensions
     {
         public static IServiceCollection AddOyangIdentity(this IServiceCollection services)
         {
-            var list = new List<Assembly>();
-            list.Add(Assembly.LoadFrom("Oyang.Identity.Domain"));
-            list.Add(Assembly.LoadFrom("Oyang.Identity.Application"));
-            list.Add(Assembly.LoadFrom("Oyang.Identity.Infrastructure"));
-            var types = list.SelectMany(t => t.GetTypes());
+            services.AddScoped<IDatabaseRepository, DatabaseRepository>();
+            services.AddScoped<IRepository<UserEntity>, EfRepository<UserEntity>>();
+            services.AddScoped<IRepository<RoleEntity>, EfRepository<RoleEntity>>();
+            services.AddScoped<IRepository<PermissionEntity>, EfRepository<PermissionEntity>>();
+            services.AddScoped<IRepository<UserRoleEntity>, EfRepository<UserRoleEntity>>();
+            services.AddScoped<IRepository<RolePermissionEntity>, EfRepository<RolePermissionEntity>>();
 
-            var listInterfaces = new List<Type>();
-            var applicationInterfaces = types.Where(t => t.IsInterface && t.GetInterface(nameof(IApplicationService)) != null);
-            listInterfaces.AddRange(applicationInterfaces);
-            var repositoryInterfaces = types.Where(t => t.IsInterface && t.GetInterface(nameof(IRepository)) != null);
-            listInterfaces.AddRange(repositoryInterfaces);
+            services.AddScoped<IDatabaseAppService, DatabaseAppService>();
+            services.AddScoped<IAccountAppService, AccountAppService>();
+            services.AddScoped<IUserAppService, UserAppService>();
+            services.AddScoped<IRoleAppService, RoleAppService>();
 
-            foreach (var item in listInterfaces)
-            {
-                var implementationType = types.FirstOrDefault(t => t.IsClass && t.GetInterface(item.Name) != null);
-                if (implementationType != null)
-                {
-                    services.AddScoped(item, implementationType);
-                }
-            }
             return services;
         }
     }

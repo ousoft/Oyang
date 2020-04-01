@@ -9,10 +9,7 @@ namespace Oyang.Identity.Application.Database
     public interface IDatabaseAppService : IApplicationService
     {
         //[Permission(PermissionNames.Database_GenerateDatabase, PermissionNames.Database_GenerateDatabase_Name)]
-        void GenerateDatabase();
+        bool GenerateDatabase();
         void GenerateSeedData();
-        void ClearSeedData();
-
-        void RegenerateSeedDataByPermission();
     }
 }
