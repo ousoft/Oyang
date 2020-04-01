@@ -59,31 +59,47 @@ namespace Oyang.Identity.Infrastructure.EntityFrameworkCore
                 }
             }
         }
-        public void AddAttachAudit<TEntity>(params TEntity[] entities) where TEntity : Entity
+
+        public void SetAddAudit<TEntity>(IEnumerable<TEntity> entities)
         {
-            SetAddAudit(entities);
-            var entityObjects = entities.Select(t => (object)t);
-            _dbContext.AddRange(entityObjects);
+            SetAddAudit(entities.ToArray());
         }
-        public void UpdateAttachAudit<TEntity>(params TEntity[] entities) where TEntity : Entity
+        public void SetUpdateAudit<TEntity>(IEnumerable<TEntity> entities)
         {
-            SetUpdateAudit(entities);
-            var entityObjects = entities.Select(t => (object)t);
-            _dbContext.UpdateRange(entityObjects);
+            SetUpdateAudit(entities.ToArray());
         }
-        public void RemoveAttachAudit<TEntity>(params TEntity[] entities) where TEntity : Entity
+        public void SetRemoveAudit<TEntity>(IEnumerable<TEntity> entities)
         {
-            SetRemoveAudit(entities);
+            SetRemoveAudit(entities.ToArray());
         }
-        public void RemoveAttachAudit<TEntity>(params Guid[] ids) where TEntity : Entity
-        {
-            var entities = _dbContext.Set<TEntity>().Where(t => ids.Contains(t.Id)).ToArray();
-            RemoveAttachAudit(entities);
-        }
-        public void RemoveAttachAudit<TEntity>(System.Linq.Expressions.Expression<Func<TEntity, bool>> predicate) where TEntity : Entity
-        {
-            var entities = _dbContext.Set<TEntity>().Where(predicate).ToArray();
-            RemoveAttachAudit(entities);
-        }
+
+
+
+        //public void AddAttachAudit<TEntity>(params TEntity[] entities) where TEntity : Entity
+        //{
+        //    SetAddAudit(entities);
+        //    var entityObjects = entities.Select(t => (object)t);
+        //    _dbContext.AddRange(entityObjects);
+        //}
+        //public void UpdateAttachAudit<TEntity>(params TEntity[] entities) where TEntity : Entity
+        //{
+        //    SetUpdateAudit(entities);
+        //    var entityObjects = entities.Select(t => (object)t);
+        //    _dbContext.UpdateRange(entityObjects);
+        //}
+        //public void RemoveAttachAudit<TEntity>(params TEntity[] entities) where TEntity : Entity
+        //{
+        //    SetRemoveAudit(entities);
+        //}
+        //public void RemoveAttachAudit<TEntity>(params Guid[] ids) where TEntity : Entity
+        //{
+        //    var entities = _dbContext.Set<TEntity>().Where(t => ids.Contains(t.Id)).ToArray();
+        //    RemoveAttachAudit(entities);
+        //}
+        //public void RemoveAttachAudit<TEntity>(System.Linq.Expressions.Expression<Func<TEntity, bool>> predicate) where TEntity : Entity
+        //{
+        //    var entities = _dbContext.Set<TEntity>().Where(predicate).ToArray();
+        //    RemoveAttachAudit(entities);
+        //}
     }
 }

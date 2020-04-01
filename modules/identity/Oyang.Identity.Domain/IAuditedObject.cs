@@ -4,16 +4,14 @@ using System.Text;
 
 namespace Oyang.Identity.Domain
 {
-    public class Entity : IEntity<Guid>, IAuditedObject<Guid?>
+    public interface IAuditedObject<TKey>
     {
-        public Guid Id { get; set; }
         public DateTime CreationTime { get; set; }
-        public Guid? CreatorId { get; set; }
+        public TKey CreatorId { get; set; }
         public DateTime? LastModificationTime { get; set; }
-        public Guid? LastModifierId { get; set; }
+        public TKey LastModifierId { get; set; }
         public bool IsDeleted { get; set; }
-        public Guid? DeleterId { get; set; }
+        public TKey DeleterId { get; set; }
         public DateTime? DeletionTime { get; set; }
     }
-
 }

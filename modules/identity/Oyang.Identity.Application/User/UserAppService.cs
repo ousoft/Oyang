@@ -4,6 +4,7 @@ using Oyang.Identity.Application.User.Dtos;
 using System;
 using System.Collections.Generic;
 using Oyang.Identity.Domain.Entities;
+using System.Linq;
 
 namespace Oyang.Identity.Application.User
 {
@@ -47,7 +48,7 @@ namespace Oyang.Identity.Application.User
         }
 
         public void SetRole(SetRoleInputDto input)
-        {
+        {            
             _repository.SetRole(input.UserId,input.RoleIds);
         }
 

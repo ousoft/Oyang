@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 
 namespace Oyang.Identity.Domain
 {
@@ -8,12 +8,8 @@ namespace Oyang.Identity.Domain
     {
 
     }
-    public interface IRepository<TEntity> : IRepository where TEntity : Entity
+    public interface IRepository<TEntity> : IBasicRepository<TEntity>, IRangeRepository<TEntity>, IReadOnlyRepository<TEntity> where TEntity : Entity
     {
-        List<TEntity> GetList();
-        TEntity Get(Guid id);
-        void Add(TEntity entity);
-        void Update(TEntity entity);
-        void Remove(Guid id);
+
     }
 }

@@ -12,12 +12,15 @@ using Microsoft.Extensions.Hosting;
 using Oyang.Identity.Infrastructure.EntityFrameworkCore;
 using AspectCore.Configuration;
 using AspectCore.DependencyInjection;
-using AspectCore.Extensions.DependencyInjection;
 using Oyang.Identity.Domain;
 using Oyang.Identity.Web.Middlewares;
 using Oyang.Identity.Web.Extensions;
+using Oyang.Identity.Application.Database;
 using Oyang.Identity.Application.User;
-using Oyang.Identity.Infrastructure.AspectCore;
+using Oyang.Identity.Application.Role;
+using Oyang.Identity.Application.Account;
+using Oyang.Identity.Domain.Repositories;
+using Oyang.Identity.Infrastructure.EntityFrameworkCore.Repositories;
 using Oyang.Identity.Infrastructure.AutoMapper;
 using Oyang.Identity.Infrastructure.Identity;
 using AutoMapper;
@@ -50,32 +53,29 @@ namespace Oyang.Identity.Web
                     });
             });
 
-            services.AddScoped<IMapper>(t =>
-            {
-                var mapperConfiguration = new MapperConfiguration(t =>
-                {
-                    t.AddProfile<IdentityProfile>();
-                });
-                return mapperConfiguration.CreateMapper();
-            });
-            services.AddSingleton<Domain.IObjectMapper, ObjectMapper>();
+
+            //services.AddSingleton<IMapper>(t =>
+            //{
+            //    var mapperConfiguration = new MapperConfiguration(t =>
+            //    {
+            //        t.AddProfile<IdentityProfile>();
+            //    });
+            //    return mapperConfiguration.CreateMapper();
+            //});
+            //services.AddSingleton<Domain.IObjectMapper, ObjectMapper>();
             services.AddScoped<ICurrentUser, CurrentUser>();
             services.AddOyangIdentity();
 
-            //services.ConfigureDynamicProxy(t => t.Interceptors.AddTyped<PermissionInterceptor>());
-            //services.BuildDynamicProxyProvider();
+            //services.AddScoped<ICurrentUser, CurrentUser>();
+            //services.AddScoped<IDatabaseAppService, DatabaseAppService>();
+            //services.AddScoped<IDatabaseRepository, DatabaseRepository>();
         }
-        //public void ConfigureContainer(ContainerBuilder builder)
-        //{
-        //    builder.RegisterAssemblyTypes(typeof(Program).Assembly).
-        //        Where(x => x.Name.EndsWith("service", StringComparison.OrdinalIgnoreCase)).AsImplementedInterfaces();
-        //    builder.RegisterDynamicProxy();
 
-        //}
-        //public void ConfigureContainer(IServiceCollection builder)
-        //{
+        public void ConfigureContainer(Autofac.ContainerBuilder builder)
+        {
 
-        //}
+        }
+
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

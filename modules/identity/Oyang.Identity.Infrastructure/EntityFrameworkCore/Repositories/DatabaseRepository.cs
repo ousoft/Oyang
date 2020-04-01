@@ -30,7 +30,7 @@ namespace Oyang.Identity.Infrastructure.EntityFrameworkCore.Repositories
 
         public void GenerateSeedDataByPermission(List<PermissionEntity> input)
         {
-            AddAttachAudit(input.ToArray());
+            //AddAttachAudit(input.ToArray());
         }
 
     }
