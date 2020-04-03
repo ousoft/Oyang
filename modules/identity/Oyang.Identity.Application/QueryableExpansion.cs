@@ -21,6 +21,11 @@ namespace Oyang.Identity.Application
         {
             var query = source;
             int totalCount = query.Count();
+            int pageCount = (int)Math.Ceiling((decimal)totalCount / pagination.PageSize);
+            if (pageCount > 0 && pagination.PageIndex > pageCount)
+            {
+                pagination.PageIndex = pageCount;
+            }
 
             if (!string.IsNullOrWhiteSpace(pagination.SortField))
             {
@@ -41,7 +46,7 @@ namespace Oyang.Identity.Application
 
         private static IQueryable<TSource> OrderBy<TSource>(IQueryable<TSource> source, bool isAscending, string sortField)
         {
-            var param = Expression.Parameter(typeof(TSource));
+            var param = Expression.Parameter(typeof(TSource));            
             var body = Expression.Property(param, sortField);
             dynamic keySelector = Expression.Lambda(body, param);
             source = isAscending ? Queryable.OrderBy(source, keySelector) : Queryable.OrderByDescending(source, keySelector);

@@ -1,0 +1,82 @@
+﻿@page "/role"
+
+@using Oyang.Identity.BlazorApp.Model
+@using Oyang.Identity.Application.User
+@using Oyang.Identity.Application.User.Dtos
+@inject IJSRuntime JSRuntime;
+@inject IUserAppService UserAppService
+
+<h3>角色管理</h3>
+
+@if (bootstrapPagination == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <form class="form-inline mb-2">
+        <div class="input-group mr-2">
+            <div class="input-group-prepend">
+                <span class="input-group-text">@nameof(UserDto.LoginName)</span>
+            </div>
+            <input type="text" class="form-control" @bind="getListInputDto.LoginName">
+        </div>
+        <button type="button" class="btn btn-primary mr-2" @onclick="GetList">查找</button>
+        <button type="button" class="btn btn-secondary mr-2" @onclick="Add">新增</button>
+    </form>
+    <OyGridViewTemplate Items="bootstrapPagination.Items">
+        <OyGridViewHeaderTemplate>
+            <th @onclick="()=>bootstrapPagination.OnSortChange(nameof(UserDto.Id))">@nameof(UserDto.Id) @bootstrapPagination.GetSortIcon(nameof(UserDto.Id))</th>
+            <th @onclick="()=>bootstrapPagination.OnSortChange(nameof(UserDto.LoginName))">@nameof(UserDto.LoginName) @bootstrapPagination.GetSortIcon(nameof(UserDto.LoginName))</th>
+            <th @onclick="()=>bootstrapPagination.OnSortChange(nameof(UserDto.PasswordHash))">@nameof(UserDto.PasswordHash) @bootstrapPagination.GetSortIcon(nameof(UserDto.PasswordHash))</th>
+            <th>@nameof(UserDto.NickName)</th>
+            <th></th>
+        </OyGridViewHeaderTemplate>
+        <OyGridViewRowTemplate>
+            <td>@context.Id</td>
+            <td>@context.LoginName</td>
+            <td>@context.PasswordHash</td>
+            <td>@context.NickName</td>
+            <td>
+                <div class="dropdown">
+                    <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="@("dropdownMenuButton"+context.Id)" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        操作
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="@("dropdownMenuButton"+context.Id)">
+                        <a class="dropdown-item" href="javascript:void(0);" @onclick="e => Edit(context.Id)">编辑</a>
+                        <a class="dropdown-item" href="javascript:void(0);">删除</a>
+                        <a class="dropdown-item" href="javascript:void(0);">重置密码</a>
+                    </div>
+                </div>
+            </td>
+        </OyGridViewRowTemplate>
+    </OyGridViewTemplate>
+}
+
+@code {
+    private GetListInputDto getListInputDto;
+    private BootstrapPagination<UserDto> bootstrapPagination;
+
+    protected override void OnInitialized()
+    {
+        getListInputDto = new GetListInputDto() { PageIndex = 1, PageSize = 10, IsAscending = true, SortField = "Id" };
+        bootstrapPagination = new BootstrapPagination<UserDto>(getListInputDto);
+        bootstrapPagination.PaginationChange += GetList;
+        GetList();
+    }
+
+    private void GetList()
+    {
+        var pagination = UserAppService.GetList(getListInputDto);
+        bootstrapPagination.SetPagination(pagination);
+    }
+
+    private void Add()
+    {
+
+    }
+    private void Edit(Guid id)
+    {
+        JSRuntime.InvokeVoidAsync("alert", id);
+    }
+}

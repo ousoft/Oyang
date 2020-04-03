@@ -1,0 +1,43 @@
+﻿@typeparam TItem
+
+@using Oyang.Identity.BlazorApp.Model
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>No.</th>
+            @OyGridViewHeaderTemplate
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Items)
+        {
+            <tr>
+                <td>@(index++)</td>
+                @OyGridViewRowTemplate(item)
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr>@OyGridViewFooterTemplate</tr>
+    </tfoot>
+</table>
+
+
+@code {
+    [Parameter]
+    public RenderFragment OyGridViewHeaderTemplate { get; set; }
+
+    [Parameter]
+    public RenderFragment<TItem> OyGridViewRowTemplate { get; set; }
+
+    [Parameter]
+    public RenderFragment OyGridViewFooterTemplate { get; set; }
+
+    [Parameter]
+    public IReadOnlyList<TItem> Items { get; set; }
+
+    private int index = 1;
+
+
+}
