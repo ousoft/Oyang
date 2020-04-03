@@ -1,0 +1,26 @@
+﻿@page "/database"
+
+@using Oyang.Identity.Application.Database
+@using Oyang.Identity.Domain
+@inject IJSRuntime JSRuntime;
+@inject IDatabaseAppService DatabaseAppService
+
+<h3>数据库管理</h3>
+
+<button type="button" class="btn btn-secondary mr-3" @onclick="GenerateDatabase">创建数据库</button>
+<button type="button" class="btn btn-secondary mr-3" @onclick="GenerateSeedData">生成种子数据</button>
+
+
+@code {
+    private void GenerateDatabase()
+    {
+        var isCreated = DatabaseAppService.GenerateDatabase();
+        JSRuntime.InvokeVoidAsync("alert", isCreated);
+    }
+
+    private void GenerateSeedData()
+    {
+        DatabaseAppService.GenerateSeedData();
+        JSRuntime.InvokeVoidAsync("alert", "操作成功");
+    }
+}

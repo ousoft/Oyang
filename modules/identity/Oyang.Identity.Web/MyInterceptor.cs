@@ -24,6 +24,7 @@ namespace Oyang.Identity.Web
                 ValidationObject.Validate(!_currentUser.HasPermission(permissionAttribute.Code), "没有访问权限");
             }
             invocation.Proceed();
+
         }
     }
 }

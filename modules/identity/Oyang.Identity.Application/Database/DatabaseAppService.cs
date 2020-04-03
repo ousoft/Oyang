@@ -13,13 +13,16 @@ namespace Oyang.Identity.Application.Database
     {
         private readonly IDatabaseRepository _databaseRepository;
         private readonly IRepository<PermissionEntity> _permissionRepository;
+        private readonly IRepository<UserEntity> _userRepository;
         public DatabaseAppService(
             IDatabaseRepository databaseRepository,
-            IRepository<PermissionEntity> permissionRepository
+            IRepository<PermissionEntity> permissionRepository,
+            IRepository<UserEntity> userRepository
             )
         {
             _databaseRepository = databaseRepository;
             _permissionRepository = permissionRepository;
+            _userRepository = userRepository;
         }
 
         public bool GenerateDatabase()
@@ -30,6 +33,7 @@ namespace Oyang.Identity.Application.Database
         public void GenerateSeedData()
         {
             GenerateSeedDataByPermission();
+            GenerateSeedDataByUser();
         }
 
         public void GenerateSeedDataByPermission()
@@ -55,6 +59,17 @@ namespace Oyang.Identity.Application.Database
                 }
             }
             _permissionRepository.AddRange(list);
+        }
+
+        public void GenerateSeedDataByUser()
+        {
+            var list = new List<UserEntity>();
+            for (int i = 0; i < 133; i++)
+            {
+                list.Add(new UserEntity() { LoginName = "testuser" + i.ToString("000"), PasswordHash = "123" });
+            }
+            _userRepository.AddRange(list);
+            _userRepository.SaveChanges();
         }
     }
 }

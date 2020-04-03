@@ -22,6 +22,10 @@ namespace Oyang.Identity.Infrastructure.EntityFrameworkCore
             DbContext = dbContext;
             CurrentUser = currentUser;
         }
+        public int SaveChanges()
+        {
+            return DbContext.SaveChanges();
+        }
 
         public TEntity Find(Guid id)
         {

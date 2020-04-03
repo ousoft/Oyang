@@ -1,0 +1,103 @@
+﻿@page "/user"
+
+@using Oyang.Identity.BlazorApp.Model
+@using Oyang.Identity.Application.User
+@using Oyang.Identity.Application.User.Dtos
+@inject IUserAppService UserAppService
+
+<h3>用户管理</h3>
+
+@if (bootstrapPagination == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="mb-3">
+        <div class="input-group mr-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1">@nameof(UserDto.LoginName)</span>
+            </div>
+            <input type="text" class="form-control" placeholder="LoginName" aria-label="LoginName" aria-describedby="basic-addon1" @bind="getListInputDto.LoginName">
+        </div>
+        <button type="button" class="btn btn-primary mr-3" @onclick="GetList">查找</button>
+        <button type="button" class="btn btn-secondary mr-3" @onclick="Add">新增</button>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>@nameof(UserDto.Id)</th>
+                <th>@nameof(UserDto.LoginName)</th>
+                <th>@nameof(UserDto.PasswordHash)</th>
+                <th>@nameof(UserDto.NickName)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in bootstrapPagination.Items)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.LoginName</td>
+                    <td>@item.PasswordHash</td>
+                    <td>@item.NickName</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div>
+        共 @bootstrapPagination.TotalCount 条数据
+    </div>
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            @if (bootstrapPagination.PageIndex > 1)
+            {
+                <li class="page-item"><a class="page-link" href="javascript:void(0);" @onclick="@(e => GetList(1))">&lt;&lt;</a></li>
+                <li class="page-item"><a class="page-link" href="javascript:void(0);" @onclick="@(e => GetList(bootstrapPagination.PageIndex - 1))">&lt;</a></li>
+            }
+            @foreach (var item in bootstrapPagination.Buttons)
+            {
+                <li class="page-item @(item == bootstrapPagination.PageIndex ? "active":"")">
+                    <a class="page-link" href="javascript:void(0);" @onclick="@(e => GetList(item))">@item</a>
+                </li>
+            }
+            @if (bootstrapPagination.PageIndex < bootstrapPagination.PageCount)
+            {
+                <li class="page-item"><a class="page-link" href="javascript:void(0);" @onclick="@(e => GetList(bootstrapPagination.PageIndex + 1))">&gt;</a></li>
+                <li class="page-item"><a class="page-link" href="javascript:void(0);" @onclick="@(e => GetList(bootstrapPagination.PageCount))">&gt;&gt;</a></li>
+            }
+        </ul>
+    </nav>
+}
+
+
+
+@code {
+    private BootstrapPagination<UserDto> bootstrapPagination;
+    private GetListInputDto getListInputDto;
+
+    private void GetList()
+    {
+        if (getListInputDto == null)
+        {
+            getListInputDto = new GetListInputDto() { PageIndex = 1, PageSize = 10, IsAscending = true, SortField = "Id" };
+        }
+        var pagination = UserAppService.GetList(getListInputDto);
+        bootstrapPagination = new BootstrapPagination<UserDto>(pagination, 7);
+    }
+
+    private void GetList(int pageIndex)
+    {
+        getListInputDto.PageIndex = pageIndex;
+        GetList();
+    }
+
+    private void Add()
+    {
+
+    }
+
+    protected override void OnInitialized()
+    {
+        GetList();
+    }
+}

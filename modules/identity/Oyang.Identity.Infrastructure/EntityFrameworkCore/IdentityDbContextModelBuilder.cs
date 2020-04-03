@@ -8,7 +8,7 @@ namespace Oyang.Identity.Infrastructure.EntityFrameworkCore
 {
     public static class IdentityDbContextModelBuilder
     {
-        public static void OnModelCreating(ModelBuilder modelBuilder)
+        public static void OnOyangIdentityModelCreating(this ModelBuilder modelBuilder)
         {
             SetTableName(modelBuilder);
             SetQueryFilter(modelBuilder);
@@ -42,6 +42,7 @@ namespace Oyang.Identity.Infrastructure.EntityFrameworkCore
         }
         private static void SetQueryFilter(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<DataDictionaryEntity>().HasQueryFilter(t => !t.IsDeleted);
             modelBuilder.Entity<UserEntity>().HasQueryFilter(t => !t.IsDeleted);
             modelBuilder.Entity<RoleEntity>().HasQueryFilter(t => !t.IsDeleted);
             modelBuilder.Entity<PermissionEntity>().HasQueryFilter(t => !t.IsDeleted);

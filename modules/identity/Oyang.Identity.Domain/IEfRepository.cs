@@ -10,6 +10,7 @@ namespace Oyang.Identity.Domain
         IQueryable<TEntity> Queryable { get; }
         IQueryable<TEntity> QueryableAsNoTracking { get; }
         TEntity Find(TKey id);
+        int SaveChanges();
     }
     public interface IEfRepository<TEntity> : IEfRepository<TEntity, Guid>
         where TEntity : Entity

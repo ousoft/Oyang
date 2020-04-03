@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Oyang.Identity.Application\Oyang.Identity.Application.csproj" />
+    <ProjectReference Include="..\Oyang.Identity.Domain\Oyang.Identity.Domain.csproj" />
+    <ProjectReference Include="..\Oyang.Identity.Infrastructure\Oyang.Identity.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

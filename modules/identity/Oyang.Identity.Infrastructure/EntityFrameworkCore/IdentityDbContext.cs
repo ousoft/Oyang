@@ -14,6 +14,7 @@ namespace Oyang.Identity.Infrastructure.EntityFrameworkCore
 
         }
 
+        public DbSet<DataDictionaryEntity>  DataDictionaries { get; set; }
         public DbSet<UserEntity> Users { get; set; }
         public DbSet<RoleEntity> Roles { get; set; }
         public DbSet<PermissionEntity> Permissions { get; set; }
@@ -26,7 +27,7 @@ namespace Oyang.Identity.Infrastructure.EntityFrameworkCore
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            IdentityDbContextModelBuilder.OnModelCreating(modelBuilder);
+            modelBuilder.OnOyangIdentityModelCreating();
         }
 
     }

@@ -60,15 +60,15 @@ namespace Oyang.Identity.Infrastructure.EntityFrameworkCore
             }
         }
 
-        public void SetAddAudit<TEntity>(IEnumerable<TEntity> entities)
+        public void SetAddAudit<TEntity>(IEnumerable<TEntity> entities) where TEntity : Entity
         {
             SetAddAudit(entities.ToArray());
         }
-        public void SetUpdateAudit<TEntity>(IEnumerable<TEntity> entities)
+        public void SetUpdateAudit<TEntity>(IEnumerable<TEntity> entities) where TEntity : Entity
         {
             SetUpdateAudit(entities.ToArray());
         }
-        public void SetRemoveAudit<TEntity>(IEnumerable<TEntity> entities)
+        public void SetRemoveAudit<TEntity>(IEnumerable<TEntity> entities) where TEntity : Entity
         {
             SetRemoveAudit(entities.ToArray());
         }

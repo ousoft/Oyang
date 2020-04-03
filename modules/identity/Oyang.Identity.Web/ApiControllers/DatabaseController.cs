@@ -27,10 +27,6 @@ namespace Oyang.Identity.Web.ApiControllers
             _appService.GenerateSeedData();
             return Ok();
         }
-        public IActionResult ClearSeedData()
-        {
-            _appService.ClearSeedData();
-            return Ok();
-        }
+
     }
 }
