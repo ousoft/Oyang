@@ -27,7 +27,7 @@ else
     <table class="table">
         <thead>
             <tr>
-                <th>No.</th>
+                @*<th>No.</th>*@
                 <th @onclick="()=>bootstrapPagination.OnSortChange(nameof(UserDto.Id))">@nameof(UserDto.Id) @bootstrapPagination.GetSortIcon(nameof(UserDto.Id))</th>
                 <th @onclick="()=>bootstrapPagination.OnSortChange(nameof(UserDto.LoginName))">@nameof(UserDto.LoginName) @bootstrapPagination.GetSortIcon(nameof(UserDto.LoginName))</th>
                 <th @onclick="()=>bootstrapPagination.OnSortChange(nameof(UserDto.PasswordHash))">@nameof(UserDto.PasswordHash) @bootstrapPagination.GetSortIcon(nameof(UserDto.PasswordHash))</th>
@@ -39,7 +39,7 @@ else
             @foreach (var item in bootstrapPagination.Items)
             {
                 <tr>
-                    <td>@(bootstrapPagination.Items.IndexOf(item)+1)</td>
+                    @*<td>@(bootstrapPagination.Items.IndexOf(item)+1)</td>*@
                     <td>@item.Id</td>
                     <td>@item.LoginName</td>
                     <td>@item.PasswordHash</td>
@@ -106,12 +106,12 @@ else
 
 @code {
     private GetListInputDto getListInputDto;
-    private BootstrapPagination<UserDto> bootstrapPagination;
+    private OyGridViewPagination<UserDto> bootstrapPagination;
 
     protected override void OnInitialized()
     {
         getListInputDto = new GetListInputDto() { PageIndex = 1, PageSize = 10, IsAscending = true, SortField = "Id" };
-        bootstrapPagination = new BootstrapPagination<UserDto>(getListInputDto);
+        bootstrapPagination = new OyGridViewPagination<UserDto>(getListInputDto);
         bootstrapPagination.PaginationChange += GetList;
         GetList();
     }
@@ -119,7 +119,7 @@ else
     private void GetList()
     {
         var pagination = UserAppService.GetList(getListInputDto);
-        bootstrapPagination.SetPagination(pagination);
+        bootstrapPagination.BindPagination(pagination);
     }
 
     private void Add()

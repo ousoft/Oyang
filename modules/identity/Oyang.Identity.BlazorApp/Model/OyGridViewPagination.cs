@@ -6,20 +6,20 @@ using System.Threading.Tasks;
 
 namespace Oyang.Identity.BlazorApp.Model
 {
-    public class BootstrapPagination<T>
+    public class OyGridViewPagination<T>
     {
-        public BootstrapPagination(Pagination pagination) : this(pagination, 5, new List<int>() { 10, 25, 50, 100 })
+        public OyGridViewPagination(Pagination pagination) : this(pagination, 5, new List<int>() { 10, 25, 50, 100 })
         {
 
         }
 
-        public BootstrapPagination(Pagination pagination, int buttonCount, List<int> numberOfPages)
+        public OyGridViewPagination(Pagination pagination, int buttonCount, List<int> numberOfPages)
         {
-            _pagination = pagination;
+            Pagination = pagination;
             ButtonCount = buttonCount;
             NumberOfPages = numberOfPages;
         }
-        private Pagination _pagination;
+        public Pagination Pagination { get; }
 
         public int PageIndex { get; private set; }
         public int PageSize { get;private set; }
@@ -27,7 +27,7 @@ namespace Oyang.Identity.BlazorApp.Model
         public bool IsAscending { get; private set; }
         public int TotalCount { get; private set; }
         public int PageCount { get; private set; }
-        public List<T> Items { get; private set; }
+        public IReadOnlyList<T> Items { get; private set; }
 
         public int ButtonCount { get; }
         public List<int> Buttons { get; private set; } = new List<int>();
@@ -38,7 +38,7 @@ namespace Oyang.Identity.BlazorApp.Model
         public bool HasFirst { get => this.PageIndex > 1; }
         public bool HasLast { get => this.PageIndex < this.PageCount; }
 
-        public void SetPagination(Pagination<T> pagination)
+        public void BindPagination(Pagination<T> pagination)
         {
             this.PageIndex = pagination.PageIndex;
             this.PageSize = pagination.PageSize;
@@ -86,35 +86,35 @@ namespace Oyang.Identity.BlazorApp.Model
 
         public void OnPageIndexChange(int pageIndex)
         {
-            _pagination.PageIndex = pageIndex;
+            Pagination.PageIndex = pageIndex;
             PaginationChange();
         }
 
         public void OnPageSizeChange(int pageSize)
         {
-            _pagination.PageSize = pageSize;
+            Pagination.PageSize = pageSize;
             PaginationChange();
         }
 
         public void OnSortChange(string sortField)
         {
-            if (_pagination.SortField == sortField)
+            if (Pagination.SortField == sortField)
             {
-                _pagination.IsAscending = !_pagination.IsAscending;
+                Pagination.IsAscending = !Pagination.IsAscending;
             }
             else
             {
-                _pagination.SortField = sortField;
-                _pagination.IsAscending = true;
+                Pagination.SortField = sortField;
+                Pagination.IsAscending = true;
             }            
             PaginationChange();
         }
 
         public string GetSortIcon(string sortField)
         {
-            if (_pagination.SortField == sortField)
+            if (Pagination.SortField == sortField)
             {
-                string icon = _pagination.IsAscending ? "∧" : "∨";
+                string icon = Pagination.IsAscending ? "∧" : "∨";
                 return icon;
             }
             else
