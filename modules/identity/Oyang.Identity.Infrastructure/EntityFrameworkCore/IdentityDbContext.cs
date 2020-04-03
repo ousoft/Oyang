@@ -26,7 +26,7 @@ namespace Oyang.Identity.Infrastructure.EntityFrameworkCore
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.OnIdentityModelCreating();
+            IdentityDbContextModelBuilder.OnModelCreating(modelBuilder);
         }
 
     }

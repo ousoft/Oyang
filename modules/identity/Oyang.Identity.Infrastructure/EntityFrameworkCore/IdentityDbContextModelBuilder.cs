@@ -6,9 +6,9 @@ using System.Text;
 
 namespace Oyang.Identity.Infrastructure.EntityFrameworkCore
 {
-    public static class IdentityDbContextModelBuilderExtensions
+    public static class IdentityDbContextModelBuilder
     {
-        public static void OnIdentityModelCreating(this ModelBuilder modelBuilder)
+        public static void OnModelCreating(ModelBuilder modelBuilder)
         {
             SetTableName(modelBuilder);
             SetQueryFilter(modelBuilder);
