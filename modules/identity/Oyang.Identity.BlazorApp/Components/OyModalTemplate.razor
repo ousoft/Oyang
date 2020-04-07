@@ -1,0 +1,75 @@
+﻿
+@inject IJSRuntime JSRuntime
+@inject NotifierService NotifierService
+
+<div class="modal fade" id="@ModalId" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog @Size" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="@(ModalId+"Label")">@Title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @OyModalBodyTemplate
+            </div>
+            <div class="modal-footer">
+                @if (IsShowCancelButton)
+                {
+                    <button type="button" class="btn btn-secondary" @onclick="Cancel">@CancelButtonText</button>
+                }
+                @if (IsShowOkButton)
+                {
+                    <button type="button" class="btn btn-primary" @onclick="Ok">@OkButtonText</button>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public RenderFragment OyModalBodyTemplate { get; set; }
+
+    [Parameter]
+    public string ModalId { get; set; }
+
+    [Parameter]
+    public string Title { get; set; }
+
+    [Parameter]
+    public bool IsShowCancelButton { get; set; } = true;
+
+    [Parameter]
+    public bool IsShowOkButton { get; set; } = true;
+
+    [Parameter]
+    public string CancelButtonText { get; set; } = "取消";
+
+    [Parameter]
+    public string OkButtonText { get; set; } = "提交";
+
+    [Parameter]
+    //modal-xl  modal-lg  modal-sm
+    public string Size { get; set; } = "";
+
+
+    protected override void OnInitialized()
+    {
+        NotifierService.ModalOkEvent += Ok;
+        NotifierService.ModalCancelEvent += Cancel;
+    }
+
+    private void Ok()
+    {
+        JSRuntime.ModalHide(ModalId);
+        JSRuntime.InvokeVoidAsync("alert", "Ok");
+    }
+    private void Cancel()
+    {
+        JSRuntime.ModalHide(ModalId);
+        JSRuntime.InvokeVoidAsync("alert", "Cancel");
+    }
+}

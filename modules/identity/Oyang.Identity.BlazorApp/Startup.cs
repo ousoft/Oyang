@@ -35,6 +35,7 @@ namespace Oyang.Identity.BlazorApp
 
             services.AddDbContext<IdentityDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnectionString")));
 
+            services.AddSingleton<Service.NotifierService>();
             services.AddOyangIdentity();
         }
 

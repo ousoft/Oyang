@@ -1,133 +1,106 @@
 ﻿@page "/user"
 
-@using Oyang.Identity.BlazorApp.Model
 @using Oyang.Identity.Application.User
 @using Oyang.Identity.Application.User.Dtos
 @inject IJSRuntime JSRuntime;
+@inject NotifierService NotifierService
 @inject IUserAppService UserAppService
 
 <h3>用户管理</h3>
 
-@if (bootstrapPagination == null)
+@if (oyGridViewPagination == null)
 {
     <p><em>Loading...</em></p>
 }
 else
 {
-    <form class="form-inline mb-2">
-        <div class="input-group mr-2">
-            <div class="input-group-prepend">
-                <span class="input-group-text">@nameof(UserDto.LoginName)</span>
-            </div>
-            <input type="text" class="form-control" @bind="getListInputDto.LoginName">
+<form class="form-inline mb-2">
+    <div class="input-group mr-2">
+        <div class="input-group-prepend">
+            <span class="input-group-text">@nameof(UserDto.LoginName)</span>
         </div>
-        <button type="button" class="btn btn-primary mr-2" @onclick="GetList">查找</button>
-        <button type="button" class="btn btn-secondary mr-2" @onclick="Add">新增</button>
-    </form>
-    <table class="table">
-        <thead>
-            <tr>
-                @*<th>No.</th>*@
-                <th @onclick="()=>bootstrapPagination.OnSortChange(nameof(UserDto.Id))">@nameof(UserDto.Id) @bootstrapPagination.GetSortIcon(nameof(UserDto.Id))</th>
-                <th @onclick="()=>bootstrapPagination.OnSortChange(nameof(UserDto.LoginName))">@nameof(UserDto.LoginName) @bootstrapPagination.GetSortIcon(nameof(UserDto.LoginName))</th>
-                <th @onclick="()=>bootstrapPagination.OnSortChange(nameof(UserDto.PasswordHash))">@nameof(UserDto.PasswordHash) @bootstrapPagination.GetSortIcon(nameof(UserDto.PasswordHash))</th>
-                <th>@nameof(UserDto.NickName)</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in bootstrapPagination.Items)
-            {
-                <tr>
-                    @*<td>@(bootstrapPagination.Items.IndexOf(item)+1)</td>*@
-                    <td>@item.Id</td>
-                    <td>@item.LoginName</td>
-                    <td>@item.PasswordHash</td>
-                    <td>@item.NickName</td>
-                    <td>
-                        <div class="dropdown">
-                            <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="@("dropdownMenuButton"+item.Id)" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                操作
-                            </button>
-                            <div class="dropdown-menu" aria-labelledby="@("dropdownMenuButton"+item.Id)">
-                                <a class="dropdown-item" href="javascript:void(0);" @onclick="e => Edit(item.Id)">编辑</a>
-                                <a class="dropdown-item" href="javascript:void(0);">删除</a>
-                                <a class="dropdown-item" href="javascript:void(0);">重置密码</a>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-    <div class="form-row align-items-center justify-content-end mb-2">
-        <div class="col-auto">
-            共 @bootstrapPagination.TotalCount 条数据
-        </div>
-        <div class="col-auto">
-            <nav aria-label="Page navigation example">
-                <ul class="pagination" style="margin-bottom:unset;">
-                    @if (bootstrapPagination.HasPrevious)
-                    {
-                        <li class="page-item"><a class="page-link" href="javascript:void(0);" @onclick="@(e => bootstrapPagination.OnPageIndexChange(1))">&lt;&lt;</a></li>
-                        <li class="page-item"><a class="page-link" href="javascript:void(0);" @onclick="@(e => bootstrapPagination.OnPageIndexChange(bootstrapPagination.PageIndex - 1))">&lt;</a></li>
-                    }
-                    @foreach (var item in bootstrapPagination.Buttons)
-                    {
-                        <li class="page-item @(item == bootstrapPagination.PageIndex ? "active":"")">
-                            <a class="page-link" href="javascript:void(0);" @onclick="@(e => bootstrapPagination.OnPageIndexChange(item))">@item</a>
-                        </li>
-                    }
-                    @if (bootstrapPagination.HasNext)
-                    {
-                        <li class="page-item"><a class="page-link" href="javascript:void(0);" @onclick="@(e => bootstrapPagination.OnPageIndexChange(bootstrapPagination.PageIndex + 1))">&gt;</a></li>
-                        <li class="page-item"><a class="page-link" href="javascript:void(0);" @onclick="@(e => bootstrapPagination.OnPageIndexChange(bootstrapPagination.PageCount))">&gt;&gt;</a></li>
-                    }
-                </ul>
-            </nav>
-        </div>
-        <div class="col-auto">
-            <select class="form-control" style="width:auto;" value="@getListInputDto.PageSize" @onchange="@(e => bootstrapPagination.OnPageSizeChange(Convert.ToInt32(e.Value)))">
-                @foreach (var item in bootstrapPagination.NumberOfPages)
-                {
-                    if (bootstrapPagination.PageSize == item)
-                    {
-                        <option value="@item" selected>@item 条/页</option>
-                    }
-                    else
-                    {
-                        <option value="@item">@item 条/页</option>
-                    }
-                }
-            </select>
-        </div>
+        <input type="text" class="form-control" @bind="getListInputDto.LoginName">
     </div>
+    <button type="button" class="btn btn-primary mr-2" @onclick="GetList">查找</button>
+    <button type="button" class="btn btn-secondary mr-2" @onclick="AddModalShow">新增</button>
+    <button type="button" class="btn btn-secondary mr-2" @onclick="ModalOk">ok</button>
+    <button type="button" class="btn btn-secondary mr-2" @onclick="ModalCancel">cancel</button>
+</form>
+    <OyGridViewTemplate OyGridViewHeaderItems="oyGridViewHeaderItems" OyGridViewPagination="oyGridViewPagination">
+        <OyGridViewRowTemplate>
+            <td>@context.Id</td>
+            <td>@context.LoginName</td>
+            <td>@context.PasswordHash</td>
+            <td>@context.NickName</td>
+            <td>
+                <div class="dropdown">
+                    <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="@(" dropdownMenuButton"+context.Id)" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        操作
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="@(" dropdownMenuButton"+context.Id)">
+                        <a class="dropdown-item" href="javascript:void(0);" @onclick="e => Edit(context.Id)">编辑</a>
+                        <a class="dropdown-item" href="javascript:void(0);">删除</a>
+                        <a class="dropdown-item" href="javascript:void(0);">重置密码</a>
+                    </div>
+                </div>
+            </td>
+        </OyGridViewRowTemplate>
+    </OyGridViewTemplate>
+
+
+    <OyModalTemplate Title="新增" ModalId="addModal">
+        <OyModalBodyTemplate>
+            新增页面
+        </OyModalBodyTemplate>
+    </OyModalTemplate>
 }
 
 @code {
+    private List<OyGridViewHeaderItem> oyGridViewHeaderItems;
     private GetListInputDto getListInputDto;
-    private OyGridViewPagination<UserDto> bootstrapPagination;
+    private OyGridViewPagination<UserDto> oyGridViewPagination;
+
 
     protected override void OnInitialized()
     {
+        oyGridViewHeaderItems = new List<OyGridViewHeaderItem>()
+        {
+            new OyGridViewHeaderItem(nameof(UserDto.Id), nameof(UserDto.Id), false),
+            new OyGridViewHeaderItem(nameof(UserDto.LoginName), nameof(UserDto.LoginName), true),
+            new OyGridViewHeaderItem(nameof(UserDto.PasswordHash), nameof(UserDto.PasswordHash), true),
+            new OyGridViewHeaderItem(nameof(UserDto.NickName), nameof(UserDto.NickName), false),
+            new OyGridViewHeaderItem(null,null, false),
+        };
         getListInputDto = new GetListInputDto() { PageIndex = 1, PageSize = 10, IsAscending = true, SortField = "Id" };
-        bootstrapPagination = new OyGridViewPagination<UserDto>(getListInputDto);
-        bootstrapPagination.PaginationChange += GetList;
+        oyGridViewPagination = new OyGridViewPagination<UserDto>(getListInputDto);
+        oyGridViewPagination.PaginationChangeEvent += GetList;
+
+
         GetList();
     }
 
     private void GetList()
     {
         var pagination = UserAppService.GetList(getListInputDto);
-        bootstrapPagination.BindPagination(pagination);
+        oyGridViewPagination.BindPagination(pagination);
     }
 
-    private void Add()
+    private void AddModalShow()
     {
-
+        JSRuntime.ModalShow("addModal");
     }
+
+    private void ModalOk()
+    {
+        NotifierService.ModalOk();
+    }
+    private void ModalCancel()
+    {
+        NotifierService.ModalCancel();
+    }
+
     private void Edit(Guid id)
     {
-        JSRuntime.InvokeVoidAsync("alert",id);
+        JSRuntime.InvokeVoidAsync("alert", id);
     }
 }

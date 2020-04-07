@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Oyang.Identity.BlazorApp.Model
+namespace Oyang.Identity.BlazorApp.Components
 {
     public class OyGridViewPagination<T>
     {
@@ -82,18 +82,18 @@ namespace Oyang.Identity.BlazorApp.Model
             }
         }
 
-        public event Action PaginationChange;
+        public event Action PaginationChangeEvent;
 
         public void OnPageIndexChange(int pageIndex)
         {
             Pagination.PageIndex = pageIndex;
-            PaginationChange();
+            PaginationChangeEvent();
         }
 
         public void OnPageSizeChange(int pageSize)
         {
             Pagination.PageSize = pageSize;
-            PaginationChange();
+            PaginationChangeEvent();
         }
 
         public void OnSortChange(string sortField)
@@ -107,7 +107,7 @@ namespace Oyang.Identity.BlazorApp.Model
                 Pagination.SortField = sortField;
                 Pagination.IsAscending = true;
             }            
-            PaginationChange();
+            PaginationChangeEvent();
         }
 
         public string GetSortIcon(string sortField)

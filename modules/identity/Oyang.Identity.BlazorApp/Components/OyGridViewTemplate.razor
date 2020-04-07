@@ -1,6 +1,5 @@
 ﻿@typeparam TItem
 
-@using Oyang.Identity.BlazorApp.Model
 @using Oyang.Identity.Domain
 
 <table class="table">
@@ -85,8 +84,9 @@
     public OyGridViewPagination<TItem> OyGridViewPagination { get; set; }
 
     private int index = 1;
-    protected override void OnInitialized()
+
+    protected override void OnAfterRender(bool firstRender)
     {
-        OyGridViewPagination.PaginationChange += () => index = 1;
+        index = 1;
     }
 }

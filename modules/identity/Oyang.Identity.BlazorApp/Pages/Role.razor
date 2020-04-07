@@ -1,82 +1,15 @@
 ﻿@page "/role"
 
-@using Oyang.Identity.Application.User
-@using Oyang.Identity.Application.User.Dtos
+@using Oyang.Identity.Application.Role
+@using Oyang.Identity.Application.Role.Dtos
 @inject IJSRuntime JSRuntime;
-@inject IUserAppService UserAppService
+@inject IRoleAppService RoleAppService
 
 <h3>角色管理</h3>
 
-@if (oyGridViewPagination == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <form class="form-inline mb-2">
-        <div class="input-group mr-2">
-            <div class="input-group-prepend">
-                <span class="input-group-text">@nameof(UserDto.LoginName)</span>
-            </div>
-            <input type="text" class="form-control" @bind="getListInputDto.LoginName">
-        </div>
-        <button type="button" class="btn btn-primary mr-2" @onclick="GetList">查找</button>
-        <button type="button" class="btn btn-secondary mr-2" @onclick="Add">新增</button>
-    </form>
-    <OyGridViewTemplate OyGridViewHeaderItems="oyGridViewHeaderItems" OyGridViewPagination="oyGridViewPagination">
-        <OyGridViewRowTemplate>
-            <td>@context.Id</td>
-            <td>@context.LoginName</td>
-            <td>@context.PasswordHash</td>
-            <td>@context.NickName</td>
-            <td>
-                <div class="dropdown">
-                    <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="@(" dropdownMenuButton"+context.Id)" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        操作
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="@(" dropdownMenuButton"+context.Id)">
-                        <a class="dropdown-item" href="javascript:void(0);" @onclick="e => Edit(context.Id)">编辑</a>
-                        <a class="dropdown-item" href="javascript:void(0);">删除</a>
-                        <a class="dropdown-item" href="javascript:void(0);">重置密码</a>
-                    </div>
-                </div>
-            </td>
-        </OyGridViewRowTemplate>
-    </OyGridViewTemplate>
-}
+
+
 
 @code {
-    private List<OyGridViewHeaderItem> oyGridViewHeaderItems;
-    private GetListInputDto getListInputDto;
-    private OyGridViewPagination<UserDto> oyGridViewPagination;
 
-    protected override void OnInitialized()
-    {
-        oyGridViewHeaderItems = new List<OyGridViewHeaderItem>()
-        {
-            new OyGridViewHeaderItem(nameof(UserDto.Id), nameof(UserDto.Id), false),
-            new OyGridViewHeaderItem(nameof(UserDto.LoginName), nameof(UserDto.LoginName), true),
-            new OyGridViewHeaderItem(nameof(UserDto.PasswordHash), nameof(UserDto.PasswordHash), true),
-            new OyGridViewHeaderItem(nameof(UserDto.NickName), nameof(UserDto.NickName), false),
-        };
-        getListInputDto = new GetListInputDto() { PageIndex = 1, PageSize = 10, IsAscending = true, SortField = "Id" };
-        oyGridViewPagination = new OyGridViewPagination<UserDto>(getListInputDto);
-        oyGridViewPagination.PaginationChange += GetList;
-        GetList();
-    }
-
-    private void GetList()
-    {
-        var pagination = UserAppService.GetList(getListInputDto);
-        oyGridViewPagination.BindPagination(pagination);
-    }
-
-    private void Add()
-    {
-
-    }
-    private void Edit(Guid id)
-    {
-        JSRuntime.InvokeVoidAsync("alert", id);
-    }
 }
