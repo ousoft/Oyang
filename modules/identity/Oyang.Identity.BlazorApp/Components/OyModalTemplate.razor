@@ -55,21 +55,21 @@
     //modal-xl  modal-lg  modal-sm
     public string Size { get; set; } = "";
 
-
-    protected override void OnInitialized()
-    {
-        NotifierService.ModalOkEvent += Ok;
-        NotifierService.ModalCancelEvent += Cancel;
-    }
-
     private void Ok()
     {
-        JSRuntime.ModalHide(ModalId);
-        JSRuntime.InvokeVoidAsync("alert", "Ok");
+        InvokeAsync(() =>
+        {
+            var isCloseModal = NotifierService.ModalOk();
+            if (isCloseModal)
+            {
+                JSRuntime.ModalHide(ModalId);
+            }
+        });
+
     }
     private void Cancel()
     {
+        InvokeAsync(() => NotifierService.ModalCancel());
         JSRuntime.ModalHide(ModalId);
-        JSRuntime.InvokeVoidAsync("alert", "Cancel");
     }
 }

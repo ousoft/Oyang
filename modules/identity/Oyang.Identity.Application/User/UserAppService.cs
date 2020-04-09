@@ -41,7 +41,7 @@ namespace Oyang.Identity.Application.User
             query = query.WhereIf(!string.IsNullOrWhiteSpace(input.LoginName), t => t.LoginName.Contains(input.LoginName));
             var (listEntity, totalCount) = query.ToPagination(input);
             //var listDto = _objectMapper.Map<List<UserEntity>, List<UserDto>>(listEntity);
-            var listDto = listEntity.Select(t => new UserDto() { Id = t.Id, LoginName = t.LoginName, NickName = "无", PasswordHash = t.PasswordHash }).ToList();
+            var listDto = listEntity.Select(t => new UserDto() { Id = t.Id, LoginName = t.LoginName, NickName = "无"}).ToList();
             var pagination = new Pagination<UserDto>(input, totalCount, listDto);
             return pagination;
         }

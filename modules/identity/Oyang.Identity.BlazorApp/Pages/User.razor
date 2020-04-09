@@ -8,96 +8,118 @@
 
 <h3>用户管理</h3>
 
-@if (oyGridViewPagination == null)
+@if (_oyDataGridPagination.IsLoading)
 {
     <p><em>Loading...</em></p>
+    @*<div class="spinner-border" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>*@
 }
 else
 {
-<form class="form-inline mb-2">
-    <div class="input-group mr-2">
-        <div class="input-group-prepend">
-            <span class="input-group-text">@nameof(UserDto.LoginName)</span>
+    <form class="form-inline mb-2">
+        <div class="input-group mr-2">
+            <div class="input-group-prepend">
+                <span class="input-group-text">@nameof(UserDto.LoginName)</span>
+            </div>
+            <input type="text" class="form-control" @bind="_getListInputDto.LoginName">
         </div>
-        <input type="text" class="form-control" @bind="getListInputDto.LoginName">
-    </div>
-    <button type="button" class="btn btn-primary mr-2" @onclick="GetList">查找</button>
-    <button type="button" class="btn btn-secondary mr-2" @onclick="AddModalShow">新增</button>
-    <button type="button" class="btn btn-secondary mr-2" @onclick="ModalOk">ok</button>
-    <button type="button" class="btn btn-secondary mr-2" @onclick="ModalCancel">cancel</button>
-</form>
-    <OyGridViewTemplate OyGridViewHeaderItems="oyGridViewHeaderItems" OyGridViewPagination="oyGridViewPagination">
-        <OyGridViewRowTemplate>
+        <button type="button" class="btn btn-primary mr-2" @onclick="GetList">查找</button>
+        <button type="button" class="btn btn-secondary mr-2" @onclick="AddModal">新增</button>
+    </form>
+
+    <OyDataGridTemplate OyDataGridPagination="_oyDataGridPagination">
+        <OyDataGridRowTemplate>
             <td>@context.Id</td>
             <td>@context.LoginName</td>
-            <td>@context.PasswordHash</td>
             <td>@context.NickName</td>
             <td>
                 <div class="dropdown">
-                    <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="@(" dropdownMenuButton"+context.Id)" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="@("dropdownMenuButton"+context.Id)" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         操作
                     </button>
-                    <div class="dropdown-menu" aria-labelledby="@(" dropdownMenuButton"+context.Id)">
+                    <div class="dropdown-menu" aria-labelledby="@("dropdownMenuButton"+context.Id)">
                         <a class="dropdown-item" href="javascript:void(0);" @onclick="e => Edit(context.Id)">编辑</a>
                         <a class="dropdown-item" href="javascript:void(0);">删除</a>
                         <a class="dropdown-item" href="javascript:void(0);">重置密码</a>
                     </div>
                 </div>
             </td>
-        </OyGridViewRowTemplate>
-    </OyGridViewTemplate>
+        </OyDataGridRowTemplate>
+    </OyDataGridTemplate>
 
 
-    <OyModalTemplate Title="新增" ModalId="addModal">
-        <OyModalBodyTemplate>
-            新增页面
-        </OyModalBodyTemplate>
-    </OyModalTemplate>
+    @*<OyModalTemplate Title="新增" ModalId="addModal">
+            <OyModalBodyTemplate>
+                <form>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">@nameof(UserDto.LoginName)</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" @bind="@addInputDto.LoginName">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">@nameof(UserDto.NickName)</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" @bind="@addInputDto.NickName">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Password</label>
+                        <div class="col-sm-10">
+                            <input type="password" class="form-control" @bind="@addInputDto.Password">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Password2</label>
+                        <div class="col-sm-10">
+                            <input type="password" class="form-control" @bind="@addInputDto.Password2">
+                        </div>
+                    </div>
+                </form>
+            </OyModalBodyTemplate>
+        </OyModalTemplate>*@
 }
 
 @code {
-    private List<OyGridViewHeaderItem> oyGridViewHeaderItems;
-    private GetListInputDto getListInputDto;
-    private OyGridViewPagination<UserDto> oyGridViewPagination;
+    private GetListInputDto _getListInputDto;
+    private OyDataGridPagination<UserDto> _oyDataGridPagination;
 
+    private AddInputDto addInputDto;
 
     protected override void OnInitialized()
     {
-        oyGridViewHeaderItems = new List<OyGridViewHeaderItem>()
-        {
-            new OyGridViewHeaderItem(nameof(UserDto.Id), nameof(UserDto.Id), false),
-            new OyGridViewHeaderItem(nameof(UserDto.LoginName), nameof(UserDto.LoginName), true),
-            new OyGridViewHeaderItem(nameof(UserDto.PasswordHash), nameof(UserDto.PasswordHash), true),
-            new OyGridViewHeaderItem(nameof(UserDto.NickName), nameof(UserDto.NickName), false),
-            new OyGridViewHeaderItem(null,null, false),
+        var oyDataGridHeaderItems = new List<OyDataGridHeaderItem>()
+    {
+            new OyDataGridHeaderItem(nameof(UserDto.Id), nameof(UserDto.Id), false),
+            new OyDataGridHeaderItem(nameof(UserDto.LoginName), nameof(UserDto.LoginName), true),
+            new OyDataGridHeaderItem(nameof(UserDto.NickName), nameof(UserDto.NickName), false),
+            new OyDataGridHeaderItem(null,null, false),
         };
-        getListInputDto = new GetListInputDto() { PageIndex = 1, PageSize = 10, IsAscending = true, SortField = "Id" };
-        oyGridViewPagination = new OyGridViewPagination<UserDto>(getListInputDto);
-        oyGridViewPagination.PaginationChangeEvent += GetList;
-
+        _getListInputDto = new GetListInputDto() { PageIndex = 1, PageSize = 10, IsAscending = true, SortField = "Id" };
+        _oyDataGridPagination = new OyDataGridPagination<UserDto>(oyDataGridHeaderItems, _getListInputDto);
+        _oyDataGridPagination.PaginationChangeEvent += GetList;
 
         GetList();
     }
 
     private void GetList()
     {
-        var pagination = UserAppService.GetList(getListInputDto);
-        oyGridViewPagination.BindPagination(pagination);
+        var pagination = UserAppService.GetList(_getListInputDto);
+        _oyDataGridPagination.BindPagination(pagination);
     }
 
-    private void AddModalShow()
+    private void AddModal()
     {
         JSRuntime.ModalShow("addModal");
     }
 
-    private void ModalOk()
+    private bool Add()
     {
-        NotifierService.ModalOk();
+        UserAppService.Add(addInputDto);
+        return true;
     }
-    private void ModalCancel()
-    {
-        NotifierService.ModalCancel();
-    }
+
 
     private void Edit(Guid id)
     {

@@ -8,16 +8,17 @@ namespace Oyang.Identity.BlazorApp.Service
     public class NotifierService
     {
         public event Action ModalCancelEvent;
+
         public void ModalCancel()
         {
             ModalCancelEvent?.Invoke();
         }
 
-        public event Action ModalOkEvent;
+        public event Func<bool> ModalOkEvent;
 
-        public void ModalOk()
+        public bool ModalOk()
         {
-            ModalOkEvent?.Invoke();
+             return ModalOkEvent?.Invoke() ?? true;
         }
     }
 }

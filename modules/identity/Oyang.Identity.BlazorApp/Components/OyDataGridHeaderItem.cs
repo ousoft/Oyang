@@ -5,13 +5,13 @@ using System.Threading.Tasks;
 
 namespace Oyang.Identity.BlazorApp.Components
 {
-    public class OyGridViewHeaderItem
+    public class OyDataGridHeaderItem
     {
-        public OyGridViewHeaderItem(string displayName, string columnName) : this(displayName, columnName, false)
+        public OyDataGridHeaderItem(string displayName, string columnName) : this(displayName, columnName, false)
         {
 
         }
-        public OyGridViewHeaderItem(string displayName, string columnName, bool allowSort)
+        public OyDataGridHeaderItem(string displayName, string columnName, bool allowSort)
         {
             this.DisplayName = displayName;
             this.ColumnName = columnName;

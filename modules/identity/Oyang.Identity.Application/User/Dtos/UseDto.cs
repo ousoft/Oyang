@@ -8,7 +8,6 @@ namespace Oyang.Identity.Application.User.Dtos
     {
         public Guid Id { get; set; }
         public string LoginName { get; set; }
-        public string PasswordHash { get; set; }
         public string NickName { get; set; }
     }
 }

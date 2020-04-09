@@ -6,23 +6,25 @@ using System.Threading.Tasks;
 
 namespace Oyang.Identity.BlazorApp.Components
 {
-    public class OyGridViewPagination<T>
+    public class OyDataGridPagination<T>
     {
-        public OyGridViewPagination(Pagination pagination) : this(pagination, 5, new List<int>() { 10, 25, 50, 100 })
+        public OyDataGridPagination(List<OyDataGridHeaderItem> oyDataGridHeaderItems, Pagination pagination) : this(oyDataGridHeaderItems, pagination, 5, new List<int>() { 10, 25, 50, 100 })
         {
 
         }
 
-        public OyGridViewPagination(Pagination pagination, int buttonCount, List<int> numberOfPages)
+        public OyDataGridPagination(List<OyDataGridHeaderItem> oyDataGridHeaderItems, Pagination pagination, int buttonCount, List<int> numberOfPages)
         {
+            OyDataGridHeaderItems = oyDataGridHeaderItems;
             Pagination = pagination;
             ButtonCount = buttonCount;
             NumberOfPages = numberOfPages;
         }
+
         public Pagination Pagination { get; }
 
         public int PageIndex { get; private set; }
-        public int PageSize { get;private set; }
+        public int PageSize { get; private set; }
         public string SortField { get; private set; }
         public bool IsAscending { get; private set; }
         public int TotalCount { get; private set; }
@@ -48,6 +50,7 @@ namespace Oyang.Identity.BlazorApp.Components
             this.PageCount = pagination.PageCount;
             this.Items = pagination.Items;
             ResetButtons();
+            IsLoading = false;
         }
         private void ResetButtons()
         {
@@ -82,18 +85,25 @@ namespace Oyang.Identity.BlazorApp.Components
             }
         }
 
+        public bool IsLoading { get; private set; }
+
+        public void StartLoading()
+        {
+            IsLoading = true;
+        }
+
         public event Action PaginationChangeEvent;
 
         public void OnPageIndexChange(int pageIndex)
         {
             Pagination.PageIndex = pageIndex;
-            PaginationChangeEvent();
+            PaginationChangeEvent?.Invoke();
         }
 
         public void OnPageSizeChange(int pageSize)
         {
             Pagination.PageSize = pageSize;
-            PaginationChangeEvent();
+            PaginationChangeEvent?.Invoke();
         }
 
         public void OnSortChange(string sortField)
@@ -106,8 +116,8 @@ namespace Oyang.Identity.BlazorApp.Components
             {
                 Pagination.SortField = sortField;
                 Pagination.IsAscending = true;
-            }            
-            PaginationChangeEvent();
+            }
+            PaginationChangeEvent?.Invoke();
         }
 
         public string GetSortIcon(string sortField)
@@ -122,6 +132,8 @@ namespace Oyang.Identity.BlazorApp.Components
                 return null;
             }
         }
+
+        public List<OyDataGridHeaderItem> OyDataGridHeaderItems { get; }
     }
 }
 

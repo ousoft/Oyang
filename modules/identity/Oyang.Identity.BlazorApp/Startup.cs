@@ -58,12 +58,12 @@ namespace Oyang.Identity.BlazorApp
 
             app.UseRouting();
 
-            app.Use(async (context, next) =>
-            {
-                await next.Invoke();
-                //var dbContext = context.RequestServices.GetService<IdentityDbContext>();
-                //dbContext.SaveChanges();
-            });
+            //app.Use(async (context, next) =>
+            //{
+            //    await next.Invoke();
+            //    var dbContext = context.RequestServices.GetService<IdentityDbContext>();
+            //    dbContext.SaveChanges();
+            //});
 
             app.UseEndpoints(endpoints =>
             {
