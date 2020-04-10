@@ -1,0 +1,50 @@
+﻿@if (!string.IsNullOrWhiteSpace(SortField) && AllowSort)
+{
+    <th @onclick="()=>OyDataGridPagination.OnSortChange(SortField)">@DisplayName @GetIcon()</th>
+}
+else
+{
+    <th>@DisplayName</th>
+}
+
+@code {
+
+    [CascadingParameter]
+    public OyDataGridPagination OyDataGridPagination { get; set; }
+
+    [Parameter]
+    public string DisplayName { get; set; }
+    [Parameter]
+    public string SortField { get; set; }
+    [Parameter]
+    public bool AllowSort { get; set; }
+
+    private string GetIcon()
+    {
+        if (OyDataGridPagination.SortField == SortField)
+        {
+            return OyDataGridPagination.IsAscending ? "∧" : "∨";
+        }
+        else
+        {
+            return string.Empty;
+        }
+    }
+
+  
+
+    //protected override void OnInitialized()
+    //{
+    //    OyDataGridPagination.PaginationChangeEvent += () =>
+    //    {
+    //        if (OyDataGridPagination.SortField == SortField)
+    //        {
+    //            _icon = OyDataGridPagination.IsAscending ? "∧" : "∨";
+    //        }
+    //        else
+    //        {
+    //            _icon = null;
+    //        }
+    //    };
+    //}
+}

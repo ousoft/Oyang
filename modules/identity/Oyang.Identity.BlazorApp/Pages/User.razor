@@ -8,7 +8,7 @@
 
 <h3>用户管理</h3>
 
-@if (_oyDataGridPagination.IsLoading)
+@if (false)
 {
     <p><em>Loading...</em></p>
     @*<div class="spinner-border" role="status">
@@ -27,8 +27,13 @@ else
         <button type="button" class="btn btn-primary mr-2" @onclick="GetList">查找</button>
         <button type="button" class="btn btn-secondary mr-2" @onclick="AddModal">新增</button>
     </form>
-
     <OyDataGridTemplate OyDataGridPagination="_oyDataGridPagination">
+        <OyDataGridHeaderTemplate>
+            <OyDataGridHeaderItemTemplate DisplayName="@nameof(UserDto.Id)" SortField="@nameof(UserDto.Id)" AllowSort="true"></OyDataGridHeaderItemTemplate>
+            <OyDataGridHeaderItemTemplate DisplayName="@nameof(UserDto.LoginName)" SortField="@nameof(UserDto.LoginName)" AllowSort="true"></OyDataGridHeaderItemTemplate>
+            <OyDataGridHeaderItemTemplate DisplayName="@nameof(UserDto.NickName)" SortField="@nameof(UserDto.NickName)" AllowSort="false"></OyDataGridHeaderItemTemplate>
+            <OyDataGridHeaderItemTemplate DisplayName="" SortField="" AllowSort="false"></OyDataGridHeaderItemTemplate>
+        </OyDataGridHeaderTemplate>
         <OyDataGridRowTemplate>
             <td>@context.Id</td>
             <td>@context.LoginName</td>
@@ -89,22 +94,15 @@ else
 
     protected override void OnInitialized()
     {
-        var oyDataGridHeaderItems = new List<OyDataGridHeaderItem>()
-    {
-            new OyDataGridHeaderItem(nameof(UserDto.Id), nameof(UserDto.Id), false),
-            new OyDataGridHeaderItem(nameof(UserDto.LoginName), nameof(UserDto.LoginName), true),
-            new OyDataGridHeaderItem(nameof(UserDto.NickName), nameof(UserDto.NickName), false),
-            new OyDataGridHeaderItem(null,null, false),
-        };
-        _getListInputDto = new GetListInputDto() { PageIndex = 1, PageSize = 10, IsAscending = true, SortField = "Id" };
-        _oyDataGridPagination = new OyDataGridPagination<UserDto>(oyDataGridHeaderItems, _getListInputDto);
+        _getListInputDto = new GetListInputDto() { PageIndex = 1, PageSize = 10, SortField = "Id", IsAscending = true };
+        _oyDataGridPagination = new OyDataGridPagination<UserDto>(_getListInputDto);
         _oyDataGridPagination.PaginationChangeEvent += GetList;
-
         GetList();
     }
 
     private void GetList()
     {
+        System.Threading.Thread.Sleep(5000);
         var pagination = UserAppService.GetList(_getListInputDto);
         _oyDataGridPagination.BindPagination(pagination);
     }

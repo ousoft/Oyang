@@ -2,82 +2,85 @@
 
 @using Oyang.Identity.Domain
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>No.</th>
-            @foreach (var item in OyDataGridPagination.OyDataGridHeaderItems)
-            {
-                if (item.AllowSort)
-                {
-                    <th @onclick="()=>OyDataGridPagination.OnSortChange(item.ColumnName)">@item.DisplayName @OyDataGridPagination.GetSortIcon(item.ColumnName)</th>
-                }
-                else
-                {
-                    <th>@item.DisplayName</th>
-                }
-            }
-        </tr>
-    </thead>
-    <tbody>
-        @if (OyDataGridPagination.Items != null)
-        {
-            @foreach (var item in OyDataGridPagination.Items)
-            {
-                <tr>
-                    <td>@(index++)</td>
-                    @OyDataGridRowTemplate(item)
-                </tr>
-            }
-        }
 
-    </tbody>
-</table>
-<div class="form-row align-items-center justify-content-end mb-2">
-    <div class="col-auto">
-        共 @OyDataGridPagination.TotalCount 条数据
+@if (OyDataGridPagination.IsLoading)
+{
+    <div class="spinner-border" role="status">
+        <span class="sr-only">Loading...</span>
     </div>
-    <div class="col-auto">
-        <nav aria-label="Page navigation example">
-            <ul class="pagination" style="margin-bottom:unset;">
-                @if (OyDataGridPagination.HasPrevious)
-                {
-                    <li class="page-item"><a class="page-link" href="javascript:void(0);" @onclick="@(e => OyDataGridPagination.OnPageIndexChange(1))">&lt;&lt;</a></li>
-                    <li class="page-item"><a class="page-link" href="javascript:void(0);" @onclick="@(e => OyDataGridPagination.OnPageIndexChange(OyDataGridPagination.PageIndex - 1))">&lt;</a></li>
-                }
-                @foreach (var item in OyDataGridPagination.Buttons)
-                {
-                    <li class="page-item @(item == OyDataGridPagination.PageIndex ? "active":"")">
-                        <a class="page-link" href="javascript:void(0);" @onclick="@(e => OyDataGridPagination.OnPageIndexChange(item))">@item</a>
-                    </li>
-                }
-                @if (OyDataGridPagination.HasNext)
-                {
-                    <li class="page-item"><a class="page-link" href="javascript:void(0);" @onclick="@(e => OyDataGridPagination.OnPageIndexChange(OyDataGridPagination.PageIndex + 1))">&gt;</a></li>
-                    <li class="page-item"><a class="page-link" href="javascript:void(0);" @onclick="@(e => OyDataGridPagination.OnPageIndexChange(OyDataGridPagination.PageCount))">&gt;&gt;</a></li>
-                }
-            </ul>
-        </nav>
-    </div>
-    <div class="col-auto">
-        <select class="form-control" style="width:auto;" value="@OyDataGridPagination.Pagination.PageSize" @onchange="@(e => OyDataGridPagination.OnPageSizeChange(Convert.ToInt32(e.Value)))">
-            @foreach (var item in OyDataGridPagination.NumberOfPages)
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>No.</th>
+                <CascadingValue Value="OyDataGridPagination">
+                    @OyDataGridHeaderTemplate
+                </CascadingValue>
+            </tr>
+        </thead>
+        <tbody>
+            @if (OyDataGridPagination.Items != null)
             {
-                if (OyDataGridPagination.PageSize == item)
+                @foreach (var item in OyDataGridPagination.Items)
                 {
-                    <option value="@item" selected>@item 条/页</option>
-                }
-                else
-                {
-                    <option value="@item">@item 条/页</option>
+                    <tr>
+                        <td>@(index++)</td>
+                        @OyDataGridRowTemplate(item)
+                    </tr>
                 }
             }
-        </select>
+        </tbody>
+    </table>
+    <div class="form-row align-items-center justify-content-end mb-2">
+        <div class="col-auto">
+            @OyDataGridPagination.ShowCustomText("第 {StartNumber}- {EndNumber} 条，共 {TotalCount} 条")
+        </div>
+        <div class="col-auto">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination" style="margin-bottom:unset;">
+                    @if (OyDataGridPagination.HasPrevious)
+                    {
+                        <li class="page-item"><a class="page-link" href="javascript:void(0);" @onclick="@(e => OyDataGridPagination.OnPageIndexChange(1))">&lt;&lt;</a></li>
+                        <li class="page-item"><a class="page-link" href="javascript:void(0);" @onclick="@(e => OyDataGridPagination.OnPageIndexChange(OyDataGridPagination.PageIndex - 1))">&lt;</a></li>
+                    }
+                    @foreach (var item in OyDataGridPagination.Buttons)
+                    {
+                        <li class="page-item @(item == OyDataGridPagination.PageIndex ? "active":"")">
+                            <a class="page-link" href="javascript:void(0);" @onclick="@(e => OyDataGridPagination.OnPageIndexChange(item))">@item</a>
+                        </li>
+                    }
+                    @if (OyDataGridPagination.HasNext)
+                    {
+                        <li class="page-item"><a class="page-link" href="javascript:void(0);" @onclick="@(e => OyDataGridPagination.OnPageIndexChange(OyDataGridPagination.PageIndex + 1))">&gt;</a></li>
+                        <li class="page-item"><a class="page-link" href="javascript:void(0);" @onclick="@(e => OyDataGridPagination.OnPageIndexChange(OyDataGridPagination.PageCount))">&gt;&gt;</a></li>
+                    }
+                </ul>
+            </nav>
+        </div>
+        <div class="col-auto">
+            <select class="form-control" style="width:auto;" value="@OyDataGridPagination.PageSize" @onchange="@(e => OyDataGridPagination.OnPageSizeChange(Convert.ToInt32(e.Value)))">
+                @foreach (var item in OyDataGridPagination.NumberOfPages)
+                {
+                    if (OyDataGridPagination.PageSize == item)
+                    {
+                        <option value="@item" selected>@item 条/页</option>
+                    }
+                    else
+                    {
+                        <option value="@item">@item 条/页</option>
+                    }
+                }
+            </select>
+        </div>
     </div>
-</div>
-
+}
 
 @code {
+    [Parameter]
+    public RenderFragment OyDataGridHeaderTemplate { get; set; }
+
     [Parameter]
     public RenderFragment<TItem> OyDataGridRowTemplate { get; set; }
 
@@ -85,6 +88,10 @@
     public OyDataGridPagination<TItem> OyDataGridPagination { get; set; }
 
     private int index = 1;
+    protected override void OnInitialized()
+    {
+        OyDataGridPagination.PaginationViewChangeEvent += () => StateHasChanged();
+    }
 
     protected override void OnAfterRender(bool firstRender)
     {
