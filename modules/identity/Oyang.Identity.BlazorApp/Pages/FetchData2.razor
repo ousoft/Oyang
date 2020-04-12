@@ -6,44 +6,30 @@
 <h1>Weather forecast</h1>
 
 <p>This component demonstrates fetching data from a service.</p>
-<button type="button" class="btn btn-primary" @onclick="LoadData">加载数据</button>
-@if (IsLoading)
+
+@if (forecasts == null)
 {
     <p><em>Loading...</em></p>
 }
 else
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Temp. (C)</th>
-                <th>Temp. (F)</th>
-                <th>Summary</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var forecast in forecasts)
-            {
-                <tr>
-                    <td>@forecast.Date.ToShortDateString()</td>
-                    <td>@forecast.TemperatureC</td>
-                    <td>@forecast.TemperatureF</td>
-                    <td>@forecast.Summary</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+<BsDataGrid TItem="WeatherForecast" Items="forecasts">
+    <BsDataGridColumn>col1</BsDataGridColumn>
+    <BsDataGridColumn>col2</BsDataGridColumn>
+    <BsDataGridColumn>col3</BsDataGridColumn>
+    <BsDataGridColumn>col4</BsDataGridColumn>
+</BsDataGrid>
+
 }
+
 
 @code {
     private WeatherForecast[] forecasts;
-    private bool IsLoading { get; set; } = false;
-    private void LoadData()
+
+    protected override async void OnInitialized()
     {
-        IsLoading = true;
-        System.Threading.Thread.Sleep(5000);
-        forecasts = ForecastService.GetForecastAsync(DateTime.Now).Result;
-        IsLoading = false;
+        forecasts = await ForecastService.GetForecastAsync(DateTime.Now);
     }
+
+
 }

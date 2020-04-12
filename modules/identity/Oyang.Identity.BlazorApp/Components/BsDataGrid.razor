@@ -1,0 +1,52 @@
+﻿@typeparam TItem
+
+<h3>OyDataGrid</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Items)
+        {
+            <tr>
+                @BsDataGridColumns(item)
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+
+@code {
+    [Parameter]
+    public int PageIndex { get; set; }
+    [Parameter]
+    public int PageSize { get; set; }
+    [Parameter]
+    public string SortField { get; set; }
+    [Parameter]
+    public bool IsAscending { get; set; }
+    [Parameter]
+    public bool ButtonCount { get; set; }
+    [Parameter]
+    public bool NumberOfPages { get; set; }
+
+    [Parameter]
+    public IList<TItem> Items { get; set; }
+
+    //[Parameter]
+    //public RenderFragment<TItem> ChildContent { get; set; }
+
+    [Parameter]
+    public RenderFragment<TItem> BsDataGridColumns { get; set; }
+
+
+
+    protected override Task OnParametersSetAsync()
+    {
+
+        return base.OnParametersSetAsync();
+    }
+}

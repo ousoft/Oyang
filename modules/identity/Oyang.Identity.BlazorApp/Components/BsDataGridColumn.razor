@@ -1,0 +1,16 @@
+﻿@ChildContent
+
+@code {
+
+    [Parameter]
+    public int Title { get; set; }
+    [Parameter]
+    public string SortField { get; set; }
+    [Parameter]
+    public bool AllowSort { get; set; }
+
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+}
