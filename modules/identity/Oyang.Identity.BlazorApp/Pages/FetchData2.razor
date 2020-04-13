@@ -2,34 +2,41 @@
 
 @using Oyang.Identity.BlazorApp.Data
 @inject WeatherForecastService ForecastService
+@inject IJSRuntime JSRuntime;
 
 <h1>Weather forecast</h1>
 
 <p>This component demonstrates fetching data from a service.</p>
 
-@if (forecasts == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-<BsDataGrid TItem="WeatherForecast" Items="forecasts">
-    <BsDataGridColumn>col1</BsDataGridColumn>
-    <BsDataGridColumn>col2</BsDataGridColumn>
-    <BsDataGridColumn>col3</BsDataGridColumn>
-    <BsDataGridColumn>col4</BsDataGridColumn>
-</BsDataGrid>
+<button class=" = btn btn-primary" @onclick="StateHasChanged">重新渲染</button>
+<button class=" = btn btn-primary" @onclick="Jiayi">加一</button>
 
-}
+<Counter @ref="Counter1"></Counter>
 
 
 @code {
-    private WeatherForecast[] forecasts;
+    private Counter Counter1;
 
-    protected override async void OnInitialized()
+    private async void Jiayi()
     {
-        forecasts = await ForecastService.GetForecastAsync(DateTime.Now);
+        if (Counter1 != null)
+        {
+            await InvokeAsync(() =>
+            {
+                Counter1.IncrementCount();
+                StateHasChanged();
+            });
+
+        }
     }
 
+    private bool _jsOk = false;
+    protected override async void OnAfterRender(bool firstRender)
+    {
+        if (firstRender && !_jsOk)
+        {
+            _jsOk = await JSRuntime.InvokeAsync<bool>("site.test");
+        }
+    }
 
 }

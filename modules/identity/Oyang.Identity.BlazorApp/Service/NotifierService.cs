@@ -20,5 +20,12 @@ namespace Oyang.Identity.BlazorApp.Service
         {
              return ModalOkEvent?.Invoke() ?? true;
         }
+
+        public event Action PaginationChangeEvent;
+
+        public void OnPaginationChange()
+        {
+            PaginationChangeEvent?.Invoke();
+        }
     }
 }

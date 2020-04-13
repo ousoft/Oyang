@@ -102,7 +102,6 @@ else
 
     private void GetList()
     {
-        System.Threading.Thread.Sleep(5000);
         var pagination = UserAppService.GetList(_getListInputDto);
         _oyDataGridPagination.BindPagination(pagination);
     }

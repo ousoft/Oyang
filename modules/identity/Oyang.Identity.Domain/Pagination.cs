@@ -17,6 +17,13 @@ namespace Oyang.Identity.Domain
         public bool IsAscending { get; set; }
 
         public List<Sort> SecondarySort { get; set; }
+        public void Bind(Pagination pagination)
+        {
+            this.PageIndex = pagination.PageIndex;
+            this.PageSize = pagination.PageSize;
+            this.SortField = pagination.SortField;
+            this.IsAscending = pagination.IsAscending;
+        }
     }
 
     public class Pagination<T> : Pagination

@@ -1,52 +1,140 @@
-﻿@typeparam TItem
+﻿@using Oyang.Identity.Domain
 
-<h3>OyDataGrid</h3>
+@typeparam TItem
+@inherits BsDataGridBasic
+@inject IJSRuntime JSRuntime;
+@inject NotifierService NotifierService
 
 <table class="table">
     <thead>
         <tr>
+            @foreach (var item in _columns)
+            {
+                @if (!string.IsNullOrWhiteSpace(item.Name) && item.AllowSort)
+                {
+                    <th @onclick="()=>OnSortChange(item.Name)">@item.Header @item.SortFieldIcon</th>
+                }
+                else
+                {
+                    <th>@item.Header</th>
+                }
+            }
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Items)
-        {
-            <tr>
-                @BsDataGridColumns(item)
-            </tr>
-        }
+        <CascadingValue Value="this">
+            @foreach (var item in Items)
+            {
+                <tr>
+                    @BsDataGridColumns(item)
+                </tr>
+            }
+        </CascadingValue>
     </tbody>
 </table>
-
-
+<div class="form-row align-items-center justify-content-end mb-2">
+    <div class="col-auto">
+        @ShowCustomText("第 {StartNumber} - {EndNumber} 条，共 {TotalCount} 条")
+    </div>
+    <div class="col-auto">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination" style="margin-bottom:unset;">
+                @if (HasPrevious)
+                {
+                    <li class="page-item"><a class="page-link" href="javascript:void(0);" @onclick="@(e => OnPageIndexChange(1))">&lt;&lt;</a></li>
+                    <li class="page-item"><a class="page-link" href="javascript:void(0);" @onclick="@(e => OnPageIndexChange(PageIndex - 1))">&lt;</a></li>
+                }
+                @foreach (var item in Buttons)
+                {
+                    <li class="page-item @(item == PageIndex ? " active":"")">
+                        <a class="page-link" href="javascript:void(0);" @onclick="@(e => OnPageIndexChange(item))">@item</a>
+                    </li>
+                }
+                @if (HasNext)
+                {
+                    <li class="page-item"><a class="page-link" href="javascript:void(0);" @onclick="@(e => OnPageIndexChange(PageIndex + 1))">&gt;</a></li>
+                    <li class="page-item"><a class="page-link" href="javascript:void(0);" @onclick="@(e => OnPageIndexChange(PageCount))">&gt;&gt;</a></li>
+                }
+            </ul>
+        </nav>
+    </div>
+    <div class="col-auto">
+        <select class="form-control" style="width:auto;" value="@PageSize" @onchange="@(e => OnPageSizeChange(Convert.ToInt32(e.Value)))">
+            @foreach (var item in NumberOfPages)
+            {
+                if (PageSize == item)
+                {
+                    <option value="@item" selected>@item 条/页</option>
+                }
+                else
+                {
+                    <option value="@item">@item 条/页</option>
+                }
+            }
+        </select>
+    </div>
+</div>
 
 @code {
     [Parameter]
-    public int PageIndex { get; set; }
-    [Parameter]
-    public int PageSize { get; set; }
-    [Parameter]
-    public string SortField { get; set; }
-    [Parameter]
-    public bool IsAscending { get; set; }
-    [Parameter]
-    public bool ButtonCount { get; set; }
-    [Parameter]
-    public bool NumberOfPages { get; set; }
-
-    [Parameter]
-    public IList<TItem> Items { get; set; }
-
-    //[Parameter]
-    //public RenderFragment<TItem> ChildContent { get; set; }
+    public IReadOnlyList<TItem> Items { get; set; }
 
     [Parameter]
     public RenderFragment<TItem> BsDataGridColumns { get; set; }
 
 
-
-    protected override Task OnParametersSetAsync()
+    private Pagination<TItem> _dataSource;
+    [Parameter]
+    public Pagination<TItem> DataSource
     {
-
-        return base.OnParametersSetAsync();
+        get => _dataSource;
+        set
+        {
+            _dataSource = value;
+            this.Items = value.Items;
+            this.TotalCount = value.TotalCount;
+            this.PageIndex = value.PageIndex;
+            ResetButtons();
+        }
     }
+
+    protected override void OnInitialized()
+    {
+        NotifierService.PaginationChangeEvent += () =>
+        {
+            InvokeAsync(() =>
+            {
+                OnPaginationChange();
+            });
+        };
+    }
+
+    private bool _jsOk = false;
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            StateHasChanged();
+        }
+        //if (firstRender && !_jsOk)
+        //{
+        //    _jsOk = await JSRuntime.InvokeAsync<bool>("site.test");
+        //    StateHasChanged();
+        //}
+    }
+
+    public string ShowCustomText(string format)
+    {
+        //Microsoft.AspNetCore.Components.EventCallback
+        //Microsoft.AspNetCore.Components.Forms.InputText
+        //format = "第 {StartNumber} - {EndNumber} 条，共 {TotalCount} 条"
+        var startNumber = (this.PageIndex - 1) * this.PageSize + 1;
+        var endNumber = startNumber + this.Items.Count - 1;
+        format = format.Replace("{StartNumber}", startNumber.ToString());
+        format = format.Replace("{EndNumber}", endNumber.ToString());
+        format = format.Replace("{PageCount}", PageCount.ToString());
+        format = format.Replace("{TotalCount}", TotalCount.ToString());
+        return format;
+    }
+
 }
