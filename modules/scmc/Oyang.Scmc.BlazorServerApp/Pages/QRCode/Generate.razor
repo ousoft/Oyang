@@ -1,0 +1,66 @@
+﻿@page "/QRCode/Generate"
+@using System.IO;
+@using Microsoft.AspNetCore.Hosting;
+@using Oyang.Scmc.BlazorServerApp.Data;
+@inject QRCodeService QRCodeService
+@inject IWebHostEnvironment WebHostEnvironment
+@inject MyConfiguration MyConfiguration
+@inject IJSRuntime JSRuntime
+
+<h1>二维码生成</h1>
+
+<button class="btn btn-primary" @onclick="GenerateQRCode">生成二维码</button>
+<button class="btn btn-primary" @onclick="GenerateQRCode10">生成二维码并下载（10个）</button>
+@*<p>
+        <img src="@($"/qrcode/{_uniqueId}.jpg")" />
+        <img src="@_imageBase64" />
+        <a href="@("/QRCode/ScanCode/"+_uniqueId)" >Link</a>
+    </p>*@
+@if (!string.IsNullOrWhiteSpace(_imageBase64))
+{
+    <p class="mt-2">
+        <div class="card" style="width: 18rem;">
+            <img src="@_imageBase64" class="card-img-top" alt="...">
+            <div class="card-body">
+                <a href="@("/QRCode/ScanCode/"+_uniqueId)" class="card-link">Link</a>
+            </div>
+        </div>
+    </p>
+}
+
+
+@code {
+    private Guid _uniqueId;
+    private string _imageBase64;
+
+
+    private void GenerateQRCode()
+    {
+        _uniqueId = Guid.NewGuid();
+        var url = MyConfiguration.QRCodeUrlPrefix + _uniqueId;
+        var bitmap = QRCodeService.GenerateImage(url, 10);
+        //var fileName = Path.Combine(WebHostEnvironment.WebRootPath, "qrcode", _uniqueId + ".jpg");
+        //bitmap.Save(fileName);
+
+        QRCodeService.CreateQRCode(_uniqueId);
+
+        byte[] bytes = null;
+        using (var stream = new MemoryStream())
+        {
+            bitmap.Save(stream, System.Drawing.Imaging.ImageFormat.Jpeg);
+            bytes = stream.ToArray();
+        }
+        var imageBase64 = Convert.ToBase64String(bytes);
+        _imageBase64 = "data:image/jepg;base64," + imageBase64;
+        StateHasChanged();
+    }
+
+    private void GenerateQRCode10()
+    {
+        var stream = QRCodeService.CreateQRCodes();
+        var fileName = DateTime.Now.ToString("yyyy-MM-dd_HHmmss") + ".zip";
+        var fullName = Path.Combine(WebHostEnvironment.WebRootPath, "qrcode", fileName);
+        System.IO.File.WriteAllBytes(fullName, stream.ToArray());
+        JSRuntime.InvokeVoidAsync("open", "/qrcode/" + fileName);
+    }
+}

@@ -1,0 +1,47 @@
+﻿@page "/QRCode/ScanCode/{id:guid}"
+@using Oyang.Scmc.BlazorServerApp.Data
+@inject QRCodeService QRCodeService
+@layout NoMenuLayout
+
+    <div class="container-fluid">
+        <div class="py-5 text-center">
+            <img class="d-block mx-auto mb-4" src="https://v4.bootcss.com/docs/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
+            <h2>石语坊</h2>
+            <p class="lead">石盛植之灵，植绽石之魂。</p>
+        </div>
+        @if (!string.IsNullOrWhiteSpace(_errorMessage))
+        {
+            <div class="alert alert-danger" role="alert">@_errorMessage</div>
+        }
+        else
+        {
+            if (_isBindPage)
+            {
+                <Oyang.Scmc.BlazorServerApp.Pages.QRCode.Bind Id="@Id"></Oyang.Scmc.BlazorServerApp.Pages.QRCode.Bind>
+            }
+            else
+            {
+                <Oyang.Scmc.BlazorServerApp.Pages.QRCode.Notification Id="@Id"></Oyang.Scmc.BlazorServerApp.Pages.QRCode.Notification>
+            }
+        }
+    </div>
+
+@code {
+
+    [Parameter]
+    public Guid Id { get; set; }
+
+    private string _errorMessage;
+    private bool _isBindPage = false;
+
+    protected override void OnInitialized()
+    {
+        var entity = QRCodeService.GetQRCode(Id);
+        if (entity == null)
+        {
+            _errorMessage = "二维码不存在";
+            return;
+        }
+        _isBindPage = string.IsNullOrWhiteSpace(entity.MobileNumber) ? true : false;
+    }
+}

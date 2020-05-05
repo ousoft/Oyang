@@ -1,0 +1,71 @@
+﻿@using Oyang.Scmc.BlazorServerApp.Data
+@inject QRCodeService QRCodeService
+
+<h1>绑定号码</h1>
+
+
+@if (!_isComplete)
+{
+    <form>
+        <div class="form-group">
+            <label for="inputName">姓名</label>
+            <input type="text" class="form-control" id="inputName" @bind="_name" />
+        </div>
+        <div class="form-group">
+            <label for="inputMobileNumber">号码</label>
+            <input type="text" class="form-control" id="inputMobileNumber" @bind="_mobileNumber" />
+        </div>
+        <div class="form-group">
+            <label for="inputMobileNumber2">确认号码</label>
+            <input type="text" class="form-control" id="inputMobileNumber2" @bind="_mobileNumber2" />
+        </div>
+        @if (!string.IsNullOrWhiteSpace(_errorMessage))
+        {
+            <div class="alert alert-danger" role="alert">@_errorMessage</div>
+        }
+        <button type="button" class="btn btn-primary btn-block" @onclick="BindQRCode">绑定</button>
+    </form>
+}
+else
+{
+    <div class="container">
+        <div class="py-5 text-center">
+            <img class="d-block mx-auto mb-4" src="/docs/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
+            <h2>操作成功</h2>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public Guid Id { get; set; }
+
+    private string _name;
+    private string _mobileNumber;
+    private string _mobileNumber2;
+    private string _errorMessage;
+
+    private bool _isComplete = false;
+
+    private void BindQRCode()
+    {
+        if (string.IsNullOrWhiteSpace(_mobileNumber))
+        {
+            _errorMessage = "号码不能为空";
+            return;
+        }
+        if (string.IsNullOrWhiteSpace(_mobileNumber2))
+        {
+            _errorMessage = "确认号码不能为空";
+            return;
+        }
+        if (_mobileNumber != _mobileNumber2)
+        {
+            _errorMessage = "两次输入的号码不一致";
+            return;
+        }
+        QRCodeService.BindQRCode(Id, _name, _mobileNumber);
+        _isComplete = true;
+    }
+}
+

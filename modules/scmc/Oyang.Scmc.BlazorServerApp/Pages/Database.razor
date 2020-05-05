@@ -1,0 +1,16 @@
+﻿@page "/Database"
+
+@inject Oyang.Scmc.BlazorServerApp.EntityFrameworkCore.ScmcDbContext DbContext
+@inject IJSRuntime JSRuntime
+
+<h1>数据库初始化</h1>
+
+<button class="btn btn-primary" @onclick="DatabaseInit">生成数据库</button>
+
+@code {
+    private void DatabaseInit()
+    {
+        DbContext.Database.EnsureCreated();
+        JSRuntime.InvokeVoidAsync("alert", "操作成功");
+    }
+}

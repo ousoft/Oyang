@@ -1,0 +1,23 @@
+﻿@using Oyang.Scmc.BlazorServerApp.Data
+@inject QRCodeService QRCodeService
+
+<div class="pt-5">
+    <a class="btn btn-primary btn-block" href="@("tel:"+_mobileNumber)" role="button">打电话</a>
+</div>
+
+@code {
+
+    [Parameter]
+    public Guid Id { get; set; }
+
+    private string _mobileNumber;
+
+    protected override void OnInitialized()
+    {
+        var entity = QRCodeService.GetQRCode(Id);
+        if (entity != null && !string.IsNullOrWhiteSpace(entity.MobileNumber))
+        {
+            _mobileNumber = entity.MobileNumber;
+        }
+    }
+}
