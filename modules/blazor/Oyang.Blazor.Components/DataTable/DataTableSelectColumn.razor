@@ -1,0 +1,62 @@
+﻿
+<td>
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="@_id" @bind="@IsChecked" />
+        <label class="form-check-label" for="@_id">
+            @DisplayText
+        </label>
+    </div>
+</td>
+
+@code {
+
+    [CascadingParameter]
+    public DataTableBase DataTableBase { get; set; }
+
+    [Parameter]
+    public string DisplayText { get; set; }
+
+    [Parameter]
+    public object Value { get; set; }
+
+    private bool isChecked;
+    [Parameter]
+    public bool IsChecked
+    {
+        get { return isChecked; }
+        set
+        {
+            isChecked = value;
+            OnSelectedItemChanged.InvokeAsync(new DataTableSelectedItem() { IsSelected = isChecked, Value = Value });
+        }
+    }
+
+    [Parameter]
+    public EventCallback<DataTableSelectedItem> OnSelectedItemChanged { get; set; }
+
+    Guid _id = Guid.NewGuid();
+
+
+    private async Task OnSelectedAllChanged(bool isSelected)
+    {
+        await InvokeAsync(() =>
+        {
+            this.isChecked = isSelected;
+        });
+    }
+
+
+    protected override void OnInitialized()
+    {
+        DataTableBase.SelectedAllChangedEvent += OnSelectedAllChanged;
+    }
+
+    public void Dispose()
+    {
+        DataTableBase.SelectedAllChangedEvent -= OnSelectedAllChanged;
+    }
+
+
+
+
+}

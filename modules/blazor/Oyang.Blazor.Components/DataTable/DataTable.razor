@@ -1,0 +1,92 @@
+﻿@typeparam TItem
+@inherits DataTableBase
+
+<CascadingValue Value="this">
+    <table class="table">
+        <thead>
+            <tr>
+                @if (ShowRowSelector)
+                {
+                    <th>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="cbkSelectedAll" @bind="@IsSelectedAll" />
+                            <label class="form-check-label" for="cbkSelectedAll"></label>
+                        </div>
+                    </th>
+                }
+                @if (ShowRowIndex)
+                {
+                    <th>序号</th>
+                }
+                @HeaderTemplate
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Items?.Count; i++)
+            {
+                <tr>
+                    @if (ShowRowSelector)
+                    {
+                        <DataTableSelectColumn Value="Items[i]" OnSelectedItemChanged="HandleSelectedItemChanged"></DataTableSelectColumn>
+                    }
+                    @if (ShowRowIndex)
+                    {
+                        <td>@(i+1)</td>
+                    }
+                    @RowTemplate(Items[i])
+                </tr>
+            }
+        </tbody>
+    </table>
+</CascadingValue>
+<div class="form-row align-items-center justify-content-end mb-2">
+    <div class="col-auto">
+        @CustomPaginationText()
+    </div>
+    <div class="col-auto">
+        <select class="form-control form-control-sm" style="width:auto;" @onchange="e => HandlePageSizeChanged(Convert.ToInt32(e.Value))">
+            @foreach (var item in NumberOfPages)
+            {
+                if (PageSize == item)
+                {
+                    <option value="@item" selected>@item 条/页</option>
+                }
+                else
+                {
+                    <option value="@item">@item 条/页</option>
+                }
+            }
+        </select>
+    </div>
+    <div class="col-auto">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination pagination-sm" style="margin-bottom:unset;">
+                @if (HasPrevious)
+                {
+                    <li class="page-item"><a class="page-link" href="javascript:void(0);" @onclick="e => HandlePageIndexChanged(1)">&lt;&lt;</a></li>
+                    <li class="page-item"><a class="page-link" href="javascript:void(0);" @onclick="e => HandlePageIndexChanged(PageIndex - 1)">&lt;</a></li>
+                }
+                @foreach (var item in _buttons)
+                {
+                    if (item == PageIndex)
+                    {
+                        <li class="page-item active">
+                            <a class="page-link" href="javascript:void(0);">@item</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="page-item">
+                            <a class="page-link" href="javascript:void(0);" @onclick="e => HandlePageIndexChanged(item)">@item</a>
+                        </li>
+                    }
+                }
+                @if (HasNext)
+                {
+                    <li class="page-item"><a class="page-link" href="javascript:void(0);" @onclick="e => HandlePageIndexChanged(PageIndex + 1)">&gt;</a></li>
+                    <li class="page-item"><a class="page-link" href="javascript:void(0);" @onclick="e => HandlePageIndexChanged(PageCount)">&gt;&gt;</a></li>
+                }
+            </ul>
+        </nav>
+    </div>
+</div>

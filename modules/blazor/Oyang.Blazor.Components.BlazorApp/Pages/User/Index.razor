@@ -1,0 +1,76 @@
+﻿@page "/user"
+@inject UserService UserService
+@inject IJSRuntime JSRuntime
+
+<h3>用户管理</h3>
+<form>
+    <div class="form-group">
+        <label for="exampleInputEmail1">LoginName</label>
+        <input type="text" class="form-control" @bind="_loginName">
+    </div>
+    <button type="button" class="btn btn-primary" @onclick="e => HandlePaginationChange(new PaginationEventArgs() { PageIndex = _pageIndex, PageSize=_pageSize, SortField  = _sortField, IsAscending = _isAscending })">搜索</button>
+</form>
+
+<button type="button" class="btn btn-secondary" @onclick="Edit">新增</button>
+<button type="button" class="btn btn-secondary" @onclick="Edit">编辑</button>
+<button type="button" class="btn btn-secondary" @onclick="Edit">删除</button>
+
+
+<DataTable TItem="UserEntity"
+           @bind-PageIndex="_pageIndex"
+           @bind-PageSize="_pageSize"
+           @bind-SortField="_sortField"
+           @bind-IsAscending="_isAscending"
+           @bind-TotalCount="_totalCount"
+           SelectedItems="_selectedItems"
+           Items="_list"
+           OnPaginationChanged="HandlePaginationChange"
+           ShowRowIndex="false"
+           ShowRowSelector="true"
+           >
+    <HeaderTemplate>
+        <DataTableHeader AllowSort="false" SortField="Id">Id</DataTableHeader>
+        <DataTableHeader AllowSort="true" SortField="LoginName">LoginName</DataTableHeader>
+        <DataTableHeader AllowSort="true" SortField="Password">Password</DataTableHeader>
+        <DataTableHeader AllowSort="true" SortField="CreateTime">CreateTime</DataTableHeader>
+    </HeaderTemplate>
+    <RowTemplate>
+        <DataTableColumn>@context.Id</DataTableColumn>
+        <DataTableColumn>@context.LoginName</DataTableColumn>
+        <DataTableColumn>@context.Password</DataTableColumn>
+        <DataTableColumn>@context.CreateTime</DataTableColumn>
+    </RowTemplate>
+</DataTable>
+
+@code {
+    int _pageIndex = 1;
+    int _pageSize = 10;
+    string _sortField = "LoginName";
+    bool _isAscending = true;
+    int _totalCount = 0;
+    List<UserEntity> _list;
+    List<UserEntity> _selectedItems = new List<UserEntity>();
+    string _loginName;
+
+
+
+    private void HandlePaginationChange(PaginationEventArgs e)
+    {
+        (_list, _totalCount, _pageIndex) = UserService.GetList(e.PageIndex, e.PageSize, e.SortField, e.IsAscending, _loginName);
+
+        //Alert("查询成功");
+    }
+
+
+
+    void Edit()
+    {
+        var json = System.Text.Json.JsonSerializer.Serialize(_selectedItems);
+        Alert(json);
+    }
+
+    void Alert(string message)
+    {
+        JSRuntime.InvokeVoidAsync("alert", message);
+    }
+}

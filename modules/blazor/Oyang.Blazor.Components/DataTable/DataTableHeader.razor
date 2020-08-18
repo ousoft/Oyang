@@ -1,0 +1,89 @@
+﻿@implements IDisposable
+
+@if (AllowSort && !string.IsNullOrWhiteSpace(SortField))
+{
+<th @onclick="NotifySortChanged">
+    @ChildContent
+    @if (IsAscending.HasValue)
+    {
+        if (IsAscending.Value == true)
+        {
+            <svg class="bi" width="24" height="24" fill="currentColor" style="float:right;">
+                <use xlink:href="/icons/bootstrap-icons.svg#arrow-down" />
+            </svg>
+        }
+        else
+        {
+            <svg class="bi" width="24" height="24" fill="currentColor" style="float:right;">
+                <use xlink:href="/icons/bootstrap-icons.svg#arrow-up" />
+            </svg>
+        }
+    }
+</th>
+}
+else
+{
+    <th>@ChildContent</th>
+}
+
+@code {
+
+    [CascadingParameter]
+    public DataTableBase DataTableBase { get; set; }
+
+    [Parameter]
+    public bool AllowSort { get; set; }
+
+    [Parameter]
+    public string SortField { get; set; }
+
+    [Parameter]
+    public bool? IsAscending { get; set; }
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    private async Task NotifySortChanged()
+    {
+        if (this.IsAscending == null)
+        {
+            this.IsAscending = true;
+        }
+        else if (this.IsAscending == true)
+        {
+            this.IsAscending = false;
+        }
+        else
+        {
+            this.IsAscending = null;
+        }
+        await DataTableBase.NotifySortChanged(SortField, IsAscending);
+    }
+
+    private async Task OnSortChanged(string sortField, bool? isAscending)
+    {
+        await InvokeAsync(() =>
+        {
+            if (this.SortField == sortField)
+            {
+                this.IsAscending = isAscending;
+            }
+            else
+            {
+                IsAscending = null;
+            }
+        });
+    }
+
+
+    protected override void OnInitialized()
+    {
+        DataTableBase.SortChangedEvent += OnSortChanged;
+    }
+
+    public void Dispose()
+    {
+        DataTableBase.SortChangedEvent -= OnSortChanged;
+    }
+
+}
