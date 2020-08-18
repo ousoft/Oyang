@@ -29,7 +29,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Oyang.Identity.BlazorApp", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scmc", "scmc", "{A92F1D0B-4235-45B2-8626-75448F0DAC8C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Oyang.Scmc.BlazorServerApp", "modules\scmc\Oyang.Scmc.BlazorServerApp\Oyang.Scmc.BlazorServerApp.csproj", "{A92F8D41-5C46-49B0-8CA5-6567845D74E9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Oyang.Scmc.BlazorServerApp", "modules\scmc\Oyang.Scmc.BlazorServerApp\Oyang.Scmc.BlazorServerApp.csproj", "{A92F8D41-5C46-49B0-8CA5-6567845D74E9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "blazor", "blazor", "{6F28D62A-9B69-4078-91AE-9436406604AD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Oyang.Blazor.Components", "modules\blazor\Oyang.Blazor.Components\Oyang.Blazor.Components.csproj", "{6C5146AC-DC85-4C9C-89D5-8EBF90D02AD2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Oyang.Blazor.Components.BlazorApp", "modules\blazor\Oyang.Blazor.Components.BlazorApp\Oyang.Blazor.Components.BlazorApp.csproj", "{3A19EA76-6E8C-4CC0-8706-9D5DC0D91276}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -73,6 +79,14 @@ Global
 		{A92F8D41-5C46-49B0-8CA5-6567845D74E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A92F8D41-5C46-49B0-8CA5-6567845D74E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A92F8D41-5C46-49B0-8CA5-6567845D74E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C5146AC-DC85-4C9C-89D5-8EBF90D02AD2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C5146AC-DC85-4C9C-89D5-8EBF90D02AD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C5146AC-DC85-4C9C-89D5-8EBF90D02AD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C5146AC-DC85-4C9C-89D5-8EBF90D02AD2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A19EA76-6E8C-4CC0-8706-9D5DC0D91276}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A19EA76-6E8C-4CC0-8706-9D5DC0D91276}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A19EA76-6E8C-4CC0-8706-9D5DC0D91276}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A19EA76-6E8C-4CC0-8706-9D5DC0D91276}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -90,6 +104,9 @@ Global
 		{D495ADD3-743F-482A-89FD-2C01A37DBDC3} = {ADB69C51-3241-4D53-9407-268EEFBAA686}
 		{A92F1D0B-4235-45B2-8626-75448F0DAC8C} = {67D60814-46F1-4427-8B98-02286347D260}
 		{A92F8D41-5C46-49B0-8CA5-6567845D74E9} = {A92F1D0B-4235-45B2-8626-75448F0DAC8C}
+		{6F28D62A-9B69-4078-91AE-9436406604AD} = {67D60814-46F1-4427-8B98-02286347D260}
+		{6C5146AC-DC85-4C9C-89D5-8EBF90D02AD2} = {6F28D62A-9B69-4078-91AE-9436406604AD}
+		{3A19EA76-6E8C-4CC0-8706-9D5DC0D91276} = {6F28D62A-9B69-4078-91AE-9436406604AD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {35263835-9C59-4AEF-9061-2232A71A48B7}

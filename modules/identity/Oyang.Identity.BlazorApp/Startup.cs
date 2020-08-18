@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+
 using Oyang.Identity.BlazorApp.Data;
 using Oyang.Identity.BlazorApp.Extensions;
 using Oyang.Identity.Infrastructure.EntityFrameworkCore;
@@ -37,6 +38,7 @@ namespace Oyang.Identity.BlazorApp
 
             services.AddSingleton<Service.NotifierService>();
             services.AddOyangIdentity();
+            services.AddAntDesign();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
