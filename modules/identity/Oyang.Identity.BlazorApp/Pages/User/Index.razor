@@ -1,32 +1,51 @@
 ﻿@page "/user"
+@using Oyang.Identity.Application.User
+@using Oyang.Identity.Application.User.Dtos
+@inject IUserAppService UserAppService
 
 <h3>用户管理</h3>
+<Table @ref="table"
+       DataSource="_list"
+       Total="_totalCount"
+       @bind-PageIndex="_pageIndex"
+       @bind-PageSize="_pageSize"
+       @bind-SelectedRows="_selectedRows"
+       OnPageIndexChange="GetList">
+    <Selection Key="@context.Id.ToString()" />
+    <Column Field="@context.Id" Sortable />
+    <Column Field="@context.LoginName" Format="yyyy-MM-dd" Sortable />
+    <Column Field="@context.NickName" Sortable />
+    @*<Column Title="Hot" Field="@context.Hot">
+            <Switch @bind-Value="@context.Hot"></Switch>
+        </Column>
+        <Column @bind-Field="@context.Summary" Sortable />
+        <ActionColumn>
+            <Space>
+                <SpaceItem><Button Danger OnClick="()=>Delete(context.Id)">Delete</Button></SpaceItem>
+            </Space>
+        </ActionColumn>*@
+</Table>
 
-
-<Button Type="primary" OnClick="@(()=>{ _visible = true; })">
-    Open Modal
-</Button>
-<Modal Title="@title"
-       Visible="@_visible"
-       OnOk="@HandleOk"
-       OnCancel="@HandleCancel">
-    <p>Some contents...</p>
-    <p>Some contents...</p>
-    <p>Some contents...</p>
-</Modal>
 @code{
-    string title = "BasicModal";
-    bool _visible = false;
+    ITable table;
+    private int _pageIndex;
+    private int _pageSize;
+    private int _totalCount;
+    private List<UserDto> _list;
+    private List<UserDto> _selectedRows;
 
-    private void HandleOk(MouseEventArgs e)
+    private void GetList(PaginationEventArgs e)
     {
-        Console.WriteLine(e);
-        _visible = false;
-    }
-
-    private void HandleCancel(MouseEventArgs e)
-    {
-        Console.WriteLine(e);
-        _visible = false;
+        var input = new GetListInputDto()
+        {
+            PageIndex = _pageIndex,
+            PageSize = _pageSize,
+            SortField = "",
+            IsAscending = true,
+            LoginName = null,
+        };
+        var output = UserAppService.GetList(input);
+        _totalCount = output.TotalCount;
+        _list = output.Items;
     }
 }

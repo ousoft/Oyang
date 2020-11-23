@@ -9,6 +9,7 @@
 
 <h1>二维码生成</h1>
 
+<input type="number" @bind="_requestVersion" class="form-control" />
 <button class="btn btn-primary" @onclick="GenerateQRCode">生成二维码</button>
 <button class="btn btn-primary" @onclick="GenerateQRCode10">生成二维码并下载（10个）</button>
 @*<p>
@@ -32,17 +33,18 @@
 @code {
     private Guid _uniqueId;
     private string _imageBase64;
-
+    private int _requestVersion = -1;
 
     private void GenerateQRCode()
     {
         _uniqueId = Guid.NewGuid();
         var url = MyConfiguration.QRCodeUrlPrefix + _uniqueId;
-        var bitmap = QRCodeService.GenerateImage(url, 10);
+        //var bitmap = QRCodeService.GenerateImage(url, 10);
         //var fileName = Path.Combine(WebHostEnvironment.WebRootPath, "qrcode", _uniqueId + ".jpg");
         //bitmap.Save(fileName);
 
-        QRCodeService.CreateQRCode(_uniqueId);
+        var bitmap = QRCodeService.GenerateImageTest("http://shiyufang.com/a/123456", _requestVersion);
+        //QRCodeService.CreateQRCode(_uniqueId);
 
         byte[] bytes = null;
         using (var stream = new MemoryStream())

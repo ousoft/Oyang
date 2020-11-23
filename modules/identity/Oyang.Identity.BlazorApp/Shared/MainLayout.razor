@@ -1,16 +1,168 @@
 ﻿@inherits LayoutComponentBase
+@inject MessageService _message
+@inject NavigationManager NavigationManager
 
-<div class="sidebar">
-    <NavMenu />
-</div>
+<Layout>
+    <Header Class="header">
+        <div class="logo" />
+        <Menu Theme="MenuTheme.Dark" Mode="MenuMode.Horizontal" DefaultSelectedKeys=@(new[] { "2" })>
+            <MenuItem Key="1">nav 1</MenuItem>
+            <MenuItem Key="2">nav 2</MenuItem>
+            <MenuItem Key="3">nav 3</MenuItem>
+        </Menu>
+    </Header>
+    <Layout>
+        <Sider Width="200" Class="site-layout-background">
+            <Menu Mode="MenuMode.Inline"
+                  DefaultSelectedKeys=@(new[] { "" })
+                  DefaultOpenKeys=@(new[] { "" })
+                  Style="height: 100%; border-right: 0;"
+                  OnMenuItemClicked="HandleClick">
+                }
+                @foreach (var item in listMenu)
+                {
+                    @GetMenuItem(item);
+                }
+            </Menu>
+        </Sider>
+        <Layout Style=" padding: 0 24px 24px;">
+            <Breadcrumb Style="margin: 16px 0;">
+                @foreach (var item in listBreadcrumb)
+                {
+                    <BreadcrumbItem>@item</BreadcrumbItem>
+                }
+            </Breadcrumb>
+            <Content Class="site-layout-background" Style=" padding: 24px; margin: 0; min-height: 280px;">
+                @Body
+            </Content>
+        </Layout>
+    </Layout>
+</Layout>
 
-<div class="main">
-    <div class="top-row px-4">
-        <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
-    </div>
+@*RenderFragment Get()
+        {
+            RenderFragment temp =
+    @<span>
+        <Icon Type="user" Theme="outline" />
+    </span>;
+     return temp;
+    }*@
 
-    <div class="content px-4">
-        @Body
-        <div class="text-center">©2020 Oyang </div>
-    </div>
-</div>
+<style>
+    .logo {
+        width: 120px;
+        height: 31px;
+        background: rgba(255, 255, 255, 0.2);
+        margin: 16px 28px 16px 0;
+        float: left;
+    }
+
+    .site-layout-background {
+        background: #fff;
+    }
+</style>
+
+@code{
+    class MenuItemModel
+    {
+        public string Code { get; set; }
+        public string Name { get; set; }
+        public string Url { get; set; }
+        public string Icon { get; set; }
+
+        public List<MenuItemModel> Children { get; set; }
+    }
+
+    List<MenuItemModel> listMenu = null;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        listMenu = new List<MenuItemModel>()
+{
+            new MenuItemModel()
+            {
+                Code="SystemSetting",
+                Name="系统设置",
+                Children = new List<MenuItemModel>()
+    {
+                    new MenuItemModel(){  Code="SystemSetting_UserManager",Name="用户管理" },
+                    new MenuItemModel(){  Code="SystemSetting_RoleManager",Name="角色管理" },
+                    new MenuItemModel(){  Code="SystemSetting_MenuManager",Name="菜单管理" },
+                }
+            },
+            new MenuItemModel()
+            {
+                Code="TestMenu01",
+                Name="测试菜单01",
+                Children = new List<MenuItemModel>()
+{
+                    new MenuItemModel(){  Code="TestMenu0101",Name="测试菜单0101" },
+                    new MenuItemModel(){  Code="TestMenu0102",Name="测试菜单0102" },
+                    new MenuItemModel(){  Code="TestMenu0103",Name="测试菜单0103" },
+                    new MenuItemModel()
+                    {
+                        Code="TestMenu0104",
+                        Name="测试菜单0104",
+                         Children = new List<MenuItemModel>()
+{
+                            new MenuItemModel(){  Code="TestMenu010401",Name="测试菜单010401" },
+                            new MenuItemModel(){  Code="TestMenu010402",Name="测试菜单010402" },
+                            new MenuItemModel(){  Code="TestMenu010403",Name="测试菜单010403" },
+                         }
+                    },
+                }
+            },
+        };
+
+
+    }
+
+
+    List<string> listBreadcrumb = new List<string>();
+    private void HandleClick(MenuItem menuItem)
+    {
+        NavigationManager.NavigateTo(menuItem.Key);
+
+        var list = new List<string>();
+        list.Add(menuItem.Key);
+        var tempSubMenu = menuItem.ParentMenu;
+        while (tempSubMenu != null)
+        {
+            list.Add(tempSubMenu.Key);
+            tempSubMenu = tempSubMenu.Parent;
+        }
+        list.Reverse();
+        list.Insert(0, "Home");
+        listBreadcrumb = list;
+    }
+
+    RenderFragment GetTitle(string name)
+    {
+        RenderFragment temp =@<span><Icon Type="user" Theme="outline" />@name</span>;
+    return temp;
+    }
+
+RenderFragment GetMenuItem(MenuItemModel model)
+{
+RenderFragment temp = null;
+if (model.Children == null)
+{
+temp = @<MenuItem Key="@model.Code">@model.Name</MenuItem>;
+}
+else
+{
+temp =
+@<SubMenu Key="@model.Code" Title=GetTitle(model.Name)>
+    @foreach (var item in model.Children)
+    {
+        @GetMenuItem(item);
+    }
+</SubMenu>;
+}
+return temp;
+}
+
+}
+
+}

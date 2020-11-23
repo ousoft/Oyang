@@ -104,6 +104,7 @@ namespace Oyang.Scmc.BlazorServerApp.Data
 
         public Bitmap GenerateImage(string url, int pixel)
         {
+
             QRCodeGenerator generator = new QRCodeGenerator();
             QRCodeData codeData = generator.CreateQrCode(url, QRCodeGenerator.ECCLevel.M, true);
             QRCoder.QRCode qrcode = new QRCoder.QRCode(codeData);
@@ -112,6 +113,18 @@ namespace Oyang.Scmc.BlazorServerApp.Data
             return qrImage;
         }
 
+
+        public Bitmap GenerateImageTest(string url,int requestedVersion)
+        {
+            QRCodeGenerator qrCodeGenerator = new QRCodeGenerator();
+
+            //下边第二个参数代表二维码质量，最后那个参数6代表生成二维码密度
+            QRCodeData qrCodeData = qrCodeGenerator.CreateQrCode(url, QRCodeGenerator.ECCLevel.M, true, true, QRCodeGenerator.EciMode.Utf8, requestedVersion);
+            QRCode qrCode = new QRCode(qrCodeData);
+
+            Bitmap qrImage = qrCode.GetGraphic(10, Color.Black, Color.White, true);
+            return qrImage;
+        }
 
     }
 }
