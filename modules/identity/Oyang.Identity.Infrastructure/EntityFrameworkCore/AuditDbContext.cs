@@ -86,10 +86,10 @@ namespace Oyang.Identity.Infrastructure.EntityFrameworkCore
             var entities = base.Set<TEntity>().Where(predicate).ToArray();
             RemoveAttachAudit(entities);
         }
-        public IQueryable<TEntity> Queryable<TEntity>(bool isEnableFilter = true) where TEntity : Entity
+        public IQueryable<TEntity> Queryable<TEntity>(bool isDeletedFilter = true) where TEntity : Entity
         {
             var query = Set<TEntity>().AsQueryable();
-            if (isEnableFilter)
+            if (isDeletedFilter)
             {
                 query = query.Where(t => !t.IsDeleted);
             }
